@@ -1,14 +1,21 @@
 ul,li,a,p {
-  color:#fff;
+  color: #fff !important;
   font-size:32px;
 }
-ul{
-  list-item-style:none;
-}
-li{
-  margin:0 10%;
+ul, li{
+  list-style:none !important;
 }
 
 input{
   width:600px;
+}
+.dropdown-toggle::after {
+  display: none;
+}
+.dropdown-menu {
+  background-color: grey;
+  width: 100%;
+}
+nav {
+  background-color: black;
 }

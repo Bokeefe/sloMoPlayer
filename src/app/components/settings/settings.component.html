@@ -1,0 +1,19 @@
+<form [formGroup]="settingsForm">
+  <div class="container">
+    <label>
+      Volume:
+      <input type="range" min="0" max="100" formControlName="speed">
+    </label>
+
+    <label>
+      Speed:
+      <input type="range" min="50" max="100"  formControlName="volume">
+    </label>
+
+    <label>
+      Reverb:
+      <input type="range" min="0" max="100" formControlName="reverbMix">
+    </label>
+  </div>
+
+</form>

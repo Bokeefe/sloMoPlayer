@@ -1,44 +1,23 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-
+<nav class="navbar navbar-expand-lg navbar-dark display-flex space-between">
     <a class="navbar-brand" href="#" *ngIf="!playerLoading">💀</a>
     <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw color-white" *ngIf="playerLoading"></i>
-    <span class="sr-only">Loading...</span>
-  <div class="container">
-
-  <button class="navbar-toggler" type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse">
-      <ul class="navbar-nav mx-auto nav-btns">
-        <li class="nav-item first-btn">
-          <i class="fa fa-backward"></i>
-        </li>
-
-        <li class="nav-item">
-          <i class="fa fa-random"></i>
-        </li>
-
-        <li class="nav-item">
-          <i ngClass="{{playClass}}" (click)="playPause()" id="play-btn"></i>
-        </li>
-
-        <li class="nav-item">
-          <i (click)="toggleReverb()">🌊</i>
-        </li>
-
-        <li class="nav-item">
-          <i (click)="nextTrackPlay()" class="fa fa-forward"></i>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <a class="navbar-brand" href="#"> <i class="fa fa-cogs" (click)="toggleShowExtraMenu()"></i></a>
+    <a ngClass="{{playClass}}" (click)="playPause()" id="play-btn"></a>
+    <a (click)="toggleReverb()">🌊</a>
+    <a (click)="nextTrackPlay()" class="fa fa-forward"></a>
+    <li class="nav-item dropdown position-static">
+      <a class="nav-link dropdown-toggle"
+         href="#"
+         id="navbarDropdown"
+         role="button"
+         data-toggle="dropdown"
+         aria-haspopup="true"
+         aria-expanded="false">
+        <i class="fa fa-cogs"></i>
+      </a>
+      <div class="dropdown-menu  w-100" aria-labelledby="navbarDropdown">
+        <app-settings></app-settings>
+      </div>
+    </li>
 </nav>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="showExtraMenu">

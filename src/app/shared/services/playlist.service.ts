@@ -1,6 +1,5 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {HttpClientService} from './http-client.service';
-import {Observable} from 'rxjs';
 
 @Injectable()
 export class PlaylistService {

@@ -24,7 +24,7 @@ export class PlayerPageComponent implements OnInit {
           this.setPlaylist(data);
         },
         error => {
-          alert(error);
+          alert(JSON.parse(error));
         }
       );
   }

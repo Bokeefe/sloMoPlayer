@@ -31,7 +31,7 @@ export class GenreBarComponent implements OnInit {
           this.setActiveGenre(this.getRandGenre());
         },
         error => {
-          alert(error);
+          alert(JSON.parse(error));
         }
       );
   }

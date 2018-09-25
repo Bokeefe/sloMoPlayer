@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { NgModule } from '@angular/core';
 
 // components
@@ -16,6 +16,7 @@ import { PlaylistService } from './shared/services/playlist.service';
 import {APP_BASE_HREF} from '@angular/common';
 import { HttpClientService } from './shared/services/http-client.service';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {SettingsComponent} from './components/settings/settings.component';
 
 @NgModule({
   declarations: [
@@ -23,12 +24,14 @@ import {HttpClient, HttpClientModule} from '@angular/common/http';
     ControlComponent,
     PlaylistComponent,
     GenreBarComponent,
-    PlayerPageComponent
+    PlayerPageComponent,
+    SettingsComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     {provide: APP_BASE_HREF, useValue: '/'},

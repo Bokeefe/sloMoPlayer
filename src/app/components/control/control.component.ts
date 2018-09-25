@@ -4,6 +4,7 @@ import {Component, EventEmitter, Input, OnInit, ViewChild} from '@angular/core';
 // libraries
 import * as Pizzicato from '../../../../node_modules/pizzicato/distr/Pizzicato.js';
 import {PlaylistService} from '../../shared/services/playlist.service';
+import {FormControl, FormGroup} from '@angular/forms';
 
 
 @Component({
@@ -24,6 +25,8 @@ export class ControlComponent implements OnInit {
   public playClass: string;
 
   public playerLoading: Boolean;
+
+  public settingsForm: FormGroup;
 
   public showExtraMenu: Boolean;
 
@@ -98,10 +101,6 @@ export class ControlComponent implements OnInit {
     this.pizzi.volume = value * .01;
   }
 
-  public toggleShowExtraMenu(): void {
-    this.showExtraMenu ? this.showExtraMenu = false : this.showExtraMenu = true;
-  }
-
   private setReverb (value: number): void {
     if ( value > 1) { value = value * .01; }
     if (this.pizzi.effects[0]) {
@@ -118,6 +117,8 @@ export class ControlComponent implements OnInit {
       }
     }
   }
+
+
 
   private initPlaylist(): void {
     this.playlist = JSON.parse(localStorage.getItem('playlist'));
