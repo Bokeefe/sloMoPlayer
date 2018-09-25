@@ -1,0 +1,10 @@
+<div class="genre-container">
+  <div class="genre-bar">
+    <div *ngFor="let genre of genres">
+      <div (click)="onNewGenre($event.target.id)"
+        class="genre-box {{activeGenre === genre ? 'active' : ''}}">
+        <a href="#" id="{{genre}}">{{genre}}</a>
+      </div>
+    </div>
+  </div>
+</div>

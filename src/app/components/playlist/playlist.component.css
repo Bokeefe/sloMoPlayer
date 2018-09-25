@@ -1,0 +1,6 @@
+li:hover{
+  background-color: rgba(0,0,0,.5);
+}
+li > span {
+  padding:15px;
+}

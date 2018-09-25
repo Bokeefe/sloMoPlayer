@@ -1,0 +1,3 @@
+<app-control></app-control>
+<app-playlist (songSelected)="onSelect($event)" [playlist]="playlist"></app-playlist>
+<app-genre-bar (onNewGenre$)="getPlaylist()"></app-genre-bar>

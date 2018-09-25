@@ -1,0 +1,14 @@
+ul,li,a,p {
+  color:#fff;
+  font-size:32px;
+}
+ul{
+  list-item-style:none;
+}
+li{
+  margin:0 10%;
+}
+
+input{
+  width:600px;
+}

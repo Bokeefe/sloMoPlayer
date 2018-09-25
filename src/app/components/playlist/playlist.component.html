@@ -1,0 +1,7 @@
+<ul class="playlist-items">
+  <li *ngFor="let song of playlist; let i = index" (click)="songSelect(song.title)">
+    <div class="display-flex space-between">
+     <span>{{[i+1]}}</span> <span class="title">{{song.title}}</span><span class="artist">{{song.artist}}</span>
+    </div>
+  </li>
+</ul>

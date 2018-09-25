@@ -1,0 +1,52 @@
+/* You can add global styles to this file, and also import other style files */
+a {
+  color: inherit;
+}
+.display-flex {
+  display: flex;
+}
+.space-between {
+  justify-content: space-between;
+}
+.genre-container{
+  background-color: black;
+  bottom: 0;
+  color: white;
+  position: fixed;
+  width: 100%;
+}
+.genre-bar {
+  display: flex;
+  justify-content: center;
+}
+.genre-box {
+  margin: 10px 20px;
+}
+.genre-box > a {
+  font-size: 30px;
+  padding: 15px;
+}
+.active {
+  background-color: rgba(255,255,255,.3);
+  border-radius: 10%;
+}
+.text-align-center{
+  text-align: center;
+}
+
+.playlist-items {
+  list-style: none;
+
+}
+#play-btn{
+  font-size:42px;
+}
+.color-white{
+  color:#fff;
+}
+.nav-btns {
+  width: 100%;
+}
+.first-btn {
+  margin-left: 0 !important;
+}

@@ -1,0 +1,122 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+    <a class="navbar-brand" href="#" *ngIf="!playerLoading">💀</a>
+    <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw color-white" *ngIf="playerLoading"></i>
+    <span class="sr-only">Loading...</span>
+  <div class="container">
+
+  <button class="navbar-toggler" type="button"
+            data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav mx-auto nav-btns">
+        <li class="nav-item first-btn">
+          <i class="fa fa-backward"></i>
+        </li>
+
+        <li class="nav-item">
+          <i class="fa fa-random"></i>
+        </li>
+
+        <li class="nav-item">
+          <i ngClass="{{playClass}}" (click)="playPause()" id="play-btn"></i>
+        </li>
+
+        <li class="nav-item">
+          <i (click)="toggleReverb()">🌊</i>
+        </li>
+
+        <li class="nav-item">
+          <i (click)="nextTrackPlay()" class="fa fa-forward"></i>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <a class="navbar-brand" href="#"> <i class="fa fa-cogs" (click)="toggleShowExtraMenu()"></i></a>
+</nav>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="showExtraMenu">
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <p>volume</p>
+      </li>
+      <li class="nav-item range">
+        <input #volumeRange (click)="setVolume(volumeRange.value)" type="range" min="0" max="100" value="80">
+      </li>
+    </ul>
+  </div>
+
+
+</nav>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="showExtraMenu">
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <p>speed</p>
+      </li>
+      <li class="nav-item range">
+        <input #speedRange type="range" (click)="setPlaybackSpeed(speedRange.value)" min="50" max="100" value="100">
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="showExtraMenu">
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <p>REVERB</p>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="showExtraMenu">
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-label nav-item">
+        <p>mix</p>
+      </li>
+      <li class=" nav-item range">
+        <input #verbMix type="range" (change)="setVerbMix(verbMix.value)" min="0" max="100" value="75">
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="showExtraMenu">
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <p>time</p>
+      </li>
+      <li class="nav-item range">
+        <input #verbTime type="range" (change)="setVerbTime(verbTime.value)" min="0" max="10" value="10">
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" *ngIf="showExtraMenu">
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <p>decay</p>
+      </li>
+      <li class="nav-item range">
+        <input #verbDecay type="range" (change)="setVerbDecay(verbDecay.value)" min="0" max="10" value="10">
+      </li>
+    </ul>
+  </div>
+</nav>
+<div class="progress-bar">
+  <div class="current-progress"></div>
+</div>
+
