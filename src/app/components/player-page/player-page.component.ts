@@ -56,6 +56,6 @@ export class PlayerPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getPlaylist('harp');
+
   }
 }

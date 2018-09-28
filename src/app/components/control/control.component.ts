@@ -26,10 +26,6 @@ export class ControlComponent implements OnInit {
 
   public playerLoading: Boolean;
 
-  public settingsForm: FormGroup;
-
-  public showExtraMenu: Boolean;
-
   private assetsDir: string;
 
   public playlist: Array<any>;
@@ -41,7 +37,6 @@ export class ControlComponent implements OnInit {
   constructor(private _playlistService: PlaylistService) {
     this.initPlaylist();
     this.setIsLoading(true);
-    this.showExtraMenu = false;
     this.playClass = 'fa fa-play-circle-o';
     this.defaultReverbSettings = {
       time: 10,
@@ -57,11 +52,27 @@ export class ControlComponent implements OnInit {
     };
   }
 
+  public onSettingsCallback(effectsParams: any): void {
+    this.setEffectsParams(effectsParams);
+  }
+
   public toggleReverb(): void {
     if (this.pizzi.effects[0]) {
       !this.pizzi.effects[0].mix ? this.setReverb(this.defaultReverbSettings.mix) : this.killReverb();
     } else {
       this.setReverb(this.defaultReverbSettings.mix);
+    }
+  }
+
+  private setEffectsParams(effectsParams: any): void {
+    if (this.pizzi.hasOwnProperty('sourceNode')) {
+      this.pizzi.sourceNode.playbackRate.value = effectsParams.speed * .01;
+    }
+    if (this.pizzi.hasOwnProperty('volume')) {
+      this.pizzi.volume = effectsParams.volume * .01;
+    }
+    if (this.pizzi.hasOwnProperty('effects')) {
+      this.pizzi.effects[0].mix = effectsParams.reverbMix * .01;
     }
   }
 

@@ -9,10 +9,19 @@ import {FormControl, FormGroup} from '@angular/forms';
 export class SettingsComponent implements OnInit, OnChanges {
 
 @Input() settingsForm: FormGroup;
-@Output() onSettingsCallback: EventEmitter<any>;
+
+@Output() onSettingsCallback$: EventEmitter<any>;
 
   constructor() {
     this.initSettingsForm();
+    this.initFormChangeSub();
+    this.onSettingsCallback$ = new EventEmitter<any>();
+  }
+
+  private initFormChangeSub(): void {
+    this.settingsForm.valueChanges.subscribe(
+      data => this.onSettingsCallback$.emit(data)
+    );
   }
 
   private initSettingsForm(): void {
@@ -23,11 +32,12 @@ export class SettingsComponent implements OnInit, OnChanges {
     });
   }
 
+
   ngOnChanges(): void {
-    console.log(this.settingsForm.value);
   }
 
   ngOnInit() {
+    this.onSettingsCallback$.emit(this.settingsForm.value);
   }
 
 }

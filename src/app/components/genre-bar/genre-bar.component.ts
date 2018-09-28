@@ -19,8 +19,6 @@ export class GenreBarComponent implements OnInit {
     this.onNewGenre$ =  new EventEmitter();
 
     this.getGenres();
-
-
   }
 
   public getGenres(): void {
@@ -28,7 +26,6 @@ export class GenreBarComponent implements OnInit {
       .subscribe(
         data => {
           this.setGenresArray(data);
-          this.setActiveGenre(this.getRandGenre());
         },
         error => {
           alert(JSON.parse(error));
@@ -40,23 +37,19 @@ export class GenreBarComponent implements OnInit {
     this.setActiveGenre(event);
   }
 
-  private emitNewGenre(genre: any): void {
-    this._playlistService.emitNewGenre(genre);
-  }
-
   private getRandGenre(): number {
     return Math.floor(Math.random() * this.genres.length);
   }
 
   private setActiveClass(): void {
     this.activeClass = this.activeGenre.field;
-    this.emitNewGenre(this.activeGenre);
+    this.onNewGenre$.emit(this.activeGenre);
   }
 
   private setActiveGenre(genre: number): void {
     this.activeGenre = this.genres[genre];
     this._playlistService.setGenre(this.activeGenre);
-    this.emitNewGenre(this.activeGenre);
+    this.onNewGenre$.emit(genre);
   }
 
   private setGenresArray(genres: any): void {
@@ -64,5 +57,6 @@ export class GenreBarComponent implements OnInit {
   }
 
   ngOnInit() {
+
   }
 }

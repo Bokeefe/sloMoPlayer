@@ -12,6 +12,7 @@ export class PlaylistComponent implements OnInit {
   @Output() songSelected = new EventEmitter<string>();
 
   constructor() {
+
   }
 
   public songSelect(song: string): void {
@@ -19,5 +20,8 @@ export class PlaylistComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (localStorage.getItem('playlist')) {
+      this.playlist = JSON.parse(localStorage.getItem('playlist'));
+    }
   }
 }
