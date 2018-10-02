@@ -12,6 +12,9 @@ export class PlaylistService {
   public playlist: any;
 
   constructor(private _httpClient: HttpClientService) {
+    if (localStorage.getItem('playlist')) {
+      localStorage.removeItem('playlist');
+    }
     this.newGenre$ = new EventEmitter<any>();
     this.setGenres();
   }
@@ -42,6 +45,9 @@ export class PlaylistService {
   }
 
   public setLocalPlaylist(playlist: any): void {
+    if (localStorage.getItem('playlist')) {
+      localStorage.removeItem('playlist');
+    }
     localStorage.setItem('playlist', playlist);
   }
 
@@ -50,6 +56,7 @@ export class PlaylistService {
   }
 
   private setGenres(): void {
+
     this.genres =  this._httpClient.GET('/genres/');
   }
 }

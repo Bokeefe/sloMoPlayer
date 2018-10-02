@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, DoCheck, EventEmitter, OnInit, Output} from '@angular/core';
 import {PlaylistService} from '../../shared/services/playlist.service';
 
 @Component({
@@ -6,7 +6,7 @@ import {PlaylistService} from '../../shared/services/playlist.service';
   templateUrl: './genre-bar.component.html',
   styleUrls: ['./genre-bar.component.css']
 })
-export class GenreBarComponent implements OnInit {
+export class GenreBarComponent implements DoCheck, OnInit {
   @Output() onNewGenre$: EventEmitter<any>;
 
   public activeClass: any;
@@ -55,6 +55,8 @@ export class GenreBarComponent implements OnInit {
   private setGenresArray(genres: any): void {
     this.genres = genres;
   }
+
+  ngDoCheck() {}
 
   ngOnInit() {
 

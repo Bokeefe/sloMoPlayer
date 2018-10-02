@@ -8,3 +8,6 @@ li > span {
   display: flex;
   justify-content: center;
 }
+.playlist-items {
+  padding-top: 80px;
+}
