@@ -28,8 +28,9 @@ var readMetadata = function (basedir, func) {
   var walker = walk.walk(basedir);
   walker.on("file", function (root, stats, next) {
     var p = path.join(root, stats.name);
-    var fileName = p.replace('src/assets/', '');
+    var fileName = p.replace('dist/assets/music/', '');
     trackDict(p, fileName,  function (d) {
+      console.log(d);
       md.push(d);
     });
 
@@ -108,8 +109,9 @@ readMetadata(process.argv[2] || '.', function (tracks) {
     res.json(playlist);
   });
   aura.get('/getPlaylist/:genre', jtype, function (req, res) {
-    shuffle(playlist[req.params.genre]);
-    res.json(playlist[req.params.genre]);
+    var maxThirtyPlaylist = playlist[req.params.genre].slice(0, 30);
+    shuffle(maxThirtyPlaylist);
+    res.json(maxThirtyPlaylist);
   });
   aura.get('/tracks/:id', jtype, loadTrack, function (req, res) {
     res.json(req.track);

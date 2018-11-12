@@ -1,9 +1,14 @@
-<nav class="navbar navbar-expand-lg fixed-bottom navbar-dark display-flex space-between">
-  <div *ngFor="let genre of genres">
-    <div (click)="onNewGenre($event.target.id)"
-         class="genre-box {{activeGenre === genre ? 'active' : ''}}">
-      <a href="#" id="{{genre}}">{{genre}}</a>
+<nav class="navbar navbar-expand-lg fixed-bottom navbar-dark">
+  <mat-chip-list class="genre-chip-list">
+    <div *ngFor="let genre of genres">
+
+      <!--<div (click)="onNewGenre($event.target.id)"-->
+           <!--class="genre-box {{activeGenre === genre ? 'active' : ''}}">-->
+        <!--<a href="#" id="{{genre}}">{{genre}}</a>-->
+        <mat-chip (click)="onNewGenre($event.target.id)" id="{{genre}}">{{genre}}</mat-chip>
+
+      <!--</div>-->
     </div>
-  </div>
+  </mat-chip-list>
 </nav>
 

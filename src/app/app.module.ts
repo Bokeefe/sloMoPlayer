@@ -1,16 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { NgModule } from '@angular/core';
+import {MatChipsModule, MatProgressBarModule} from '@angular/material';
 
 // components
 import { AppComponent } from './app.component';
 import { ControlComponent } from './components/control/control.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+
 import {GenreBarComponent} from './components/genre-bar/genre-bar.component';
 
 import { PlaylistComponent } from './components/playlist/playlist.component';
 
 // services
-import {TagReaderService} from './shared/services/tag-reader.service';
 import {PlayerPageComponent} from './components/player-page/player-page.component';
 import { PlaylistService } from './shared/services/playlist.service';
 import {APP_BASE_HREF} from '@angular/common';
@@ -28,6 +30,9 @@ import {SettingsComponent} from './components/settings/settings.component';
     SettingsComponent
   ],
   imports: [
+    DragDropModule,
+    MatChipsModule,
+    MatProgressBarModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,
@@ -35,8 +40,8 @@ import {SettingsComponent} from './components/settings/settings.component';
   ],
   providers: [
     {provide: APP_BASE_HREF, useValue: '/'},
+    ControlComponent,
     HttpClient,
-    TagReaderService,
     PlaylistService,
     HttpClientService],
   bootstrap: [AppComponent]

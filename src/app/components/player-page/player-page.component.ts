@@ -1,6 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+// angular
+import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+
+// services
 import {PlaylistService} from '../../shared/services/playlist.service';
-import {getRandomString} from '../../../../node_modules/@types/selenium-webdriver/safari';
+
+// components
+import {ControlComponent} from '../control/control.component';
+
+// models
+import {Song} from '../../shared/models/song';
 
 @Component({
   selector: 'app-player-page',
@@ -8,12 +16,15 @@ import {getRandomString} from '../../../../node_modules/@types/selenium-webdrive
   styleUrls: ['./player-page.component.css']
 })
 export class PlayerPageComponent implements OnInit {
+  @Output() newPlaylist$: EventEmitter<any>;
 
-  public playlist: any;
+  public playlist: Array<Song>;
 
   public genres: any;
 
-  constructor(private _playlistService: PlaylistService) {
+  constructor(private _playlistService: PlaylistService,
+              private _controlComponent: ControlComponent) {
+    this.newPlaylist$ = new EventEmitter<any>();
     this.setGenres();
   }
 
@@ -22,6 +33,7 @@ export class PlayerPageComponent implements OnInit {
       .subscribe (
         data => {
           this.setPlaylist(data);
+          this._controlComponent.onNewPlaylist(this.playlist);
         },
         error => {
           alert(JSON.parse(error));
@@ -33,26 +45,19 @@ export class PlayerPageComponent implements OnInit {
     console.log(song);
   }
 
-  public setPlaylist(playlist: any): void {
+  public setPlaylist(playlist: Array<Song>): void {
     this.playlist = playlist;
-    this.setLocalStoragePlaylist();
-  }
-
-  private getRandomGenre(): number {
-    return Math.floor(Math.random() * (this.genres.length + 1));
   }
 
   private setGenres(): void {
     this._playlistService.getGenres()
       .subscribe(
-        data => { this.genres  = data; }
+        data => {
+          console.log(typeof data, data);
+          this.genres  = data;
+        }
+
       );
-  }
-
-
-  private setLocalStoragePlaylist(): void {
-    if (localStorage.getItem('playlist')) { localStorage.removeItem('playlist'); }
-    localStorage.setItem('playlist', JSON.stringify(this.playlist));
   }
 
   ngOnInit() {

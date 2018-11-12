@@ -16,7 +16,7 @@ export class GenreBarComponent implements DoCheck, OnInit {
   public genres: any;
 
   constructor(private _playlistService: PlaylistService) {
-    this.onNewGenre$ =  new EventEmitter();
+    this.onNewGenre$ =  new EventEmitter<any>();
 
     this.getGenres();
   }

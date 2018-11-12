@@ -1,10 +1,11 @@
 // angular
-import {Component, EventEmitter, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit} from '@angular/core';
 
 // libraries
 import * as Pizzicato from '../../../../node_modules/pizzicato/distr/Pizzicato.js';
-import {PlaylistService} from '../../shared/services/playlist.service';
-import {FormControl, FormGroup} from '@angular/forms';
+
+// models
+import {Settings} from '../../shared/models/settings';
 
 
 @Component({
@@ -13,12 +14,7 @@ import {FormControl, FormGroup} from '@angular/forms';
   styleUrls: ['./control.component.css']
 })
 export class ControlComponent implements OnInit {
-@ViewChild('speedRange') speedRange;
-@ViewChild('verbMix') verbMix;
-@Input('currentSong') currentSong;
-
-
-  onEnded = new EventEmitter<string>();
+  @Input() playlist: any;
 
   public pizzi: any;
 
@@ -28,147 +24,86 @@ export class ControlComponent implements OnInit {
 
   private assetsDir: string;
 
-  public playlist: Array<any>;
+  private effectsSettings: Settings;
 
-  private bypassReverbSettings: any;
-
-  private defaultReverbSettings: any;
-
-  constructor(private _playlistService: PlaylistService) {
-    this.initPlaylist();
-    this.setIsLoading(true);
+  constructor() {
     this.playClass = 'fa fa-play-circle-o';
-    this.defaultReverbSettings = {
-      time: 10,
-      decay: 10,
-      reverse: false,
-      mix: .75
-    };
-    this.bypassReverbSettings = {
-      time: .0001,
-      decay: 0,
-      reverse: false,
-      mix: 0
-    };
-  }
-
-  public onSettingsCallback(effectsParams: any): void {
-    this.setEffectsParams(effectsParams);
-  }
-
-  public toggleReverb(): void {
-    if (this.pizzi.effects[0]) {
-      !this.pizzi.effects[0].mix ? this.setReverb(this.defaultReverbSettings.mix) : this.killReverb();
-    } else {
-      this.setReverb(this.defaultReverbSettings.mix);
-    }
-  }
-
-  private setEffectsParams(effectsParams: any): void {
-    if (this.pizzi.hasOwnProperty('sourceNode')) {
-      this.pizzi.sourceNode.playbackRate.value = effectsParams.speed * .01;
-    }
-    if (this.pizzi.hasOwnProperty('volume')) {
-      this.pizzi.volume = effectsParams.volume * .01;
-    }
-    if (this.pizzi.hasOwnProperty('effects')) {
-      this.pizzi.effects[0].mix = effectsParams.reverbMix * .01;
-    }
-  }
-
-  public playPause(): void {
-    !this.pizzi.playing ? this.playFile() : this.pauseFile();
-  }
-
-  public setPlaybackSpeed(speed: number): void {
-    this.pizzi.sourceNode.playbackRate.value = speed * .01;
-  }
-
-  public setVerbMix(value: number): void {
-    if (this.pizzi.effects[0]) {
-      this.pizzi.effects[0].mix = value * .01;
-    } else {
-      this.setReverb(value);
-    }
-  }
-
-  public setVerbDecay(value: number): void {
-    if (this.pizzi.effects[0]) {
-      this.pizzi.effects[0].decay = value * 1;
-    } else {
-      this.setReverb(this.defaultReverbSettings.mix);
-    }
-  }
-
-  public setVerbTime(value: number): void {
-    if (this.pizzi.effects[0]) {
-      this.pizzi.effects[0].time = value * 1;
-    } else {
-      this.setReverb(this.defaultReverbSettings.mix);
-    }
-  }
-
-  public setVolume(value: number): void {
-    this.pizzi.volume = value * .01;
-  }
-
-  private setReverb (value: number): void {
-    if ( value > 1) { value = value * .01; }
-    if (this.pizzi.effects[0]) {
-      this.pizzi.effects[0].mix = value;
-    } else {
-      if (value) {
-        const reverb = new Pizzicato.Effects.Reverb(this.defaultReverbSettings);
-        this.pizzi.addEffect(reverb);
-        this.pizzi.effects[0].mix = value;
-      } else {
-        const reverb = new Pizzicato.Effects.Reverb(this.defaultReverbSettings);
-        this.pizzi.addEffect(reverb);
-        this.pizzi.effects[0].mix = this.defaultReverbSettings.mix;
-      }
-    }
-  }
-
-
-
-  private initPlaylist(): void {
-    this.playlist = JSON.parse(localStorage.getItem('playlist'));
-  }
-
-  private initSound(callback): void {
-    this.assetsDir = './assets/';
-    if (this.pizzi) { delete this.pizzi; }
-    if (this.playlist) {
-      this.pizzi = new Pizzicato.Sound(
-        {
-          source: 'file',
-          options: { path: this.assetsDir + this.playlist[0].path }
-        }, function() {
-        }
-      );
-      this.initReverb();
-    }
-    callback();
-  }
-
-  private initReverb(): void {
-    this.setReverb(this.defaultReverbSettings.mix);
+    this.initEffects();
   }
 
   public nextTrackPlay(): void {
     this.pauseFile();
     this.togglePlayClass();
     this.playlist.splice(0, 1);
-    this.initSound(() => {
-      setTimeout(() => { this.playFile(); }, 1000);
+    this.initSound(this.playlist, () => {
+      setTimeout(() => {
+        this.playFile();
+      }, 1000);
     });
   }
 
-  private killReverb(): void {
-    this.pizzi.effects[0].mix = 0;
+
+  public onNewPlaylist(event: any): void {
+    this.setPlaylist(event);
+  }
+
+
+  public onSettingsCallback(effectsParams: any): void {
+    this.setEffectsParamsOnPizzi(effectsParams);
+  }
+
+  public toggleReverb(): void {
+   console.log('toggleReverb', this.pizzi);
+  }
+
+  public togglePlay(): void {
+    if (this.pizzi) {
+      !this.pizzi.playing ? this.playFile() : this.pauseFile();
+    } else {
+      console.log(this.playlist[0].path, this.pizzi);
+    }
+  }
+
+  private initSound(playlist, callback): void {
+    this.assetsDir = './assets/music/';
+
+    if (this.pizzi) {
+      delete this.pizzi;
+    }
+
+    this.pizzi = Pizzicato.Sound({
+      source: 'file',
+      options: { path: this.assetsDir + playlist[0].path }
+    }, function() {
+
+      this.pizzi.play();
+    });
+
+    callback();
+  }
+
+  private initEffects(): void {
+    this.effectsSettings = new Settings(80, 60, 80);
+  }
+
+  private initReverb(): void {
+    const verb = new Pizzicato.Effects.Reverb({
+      time: 9,
+      decay: 9,
+      reverse: false,
+      mix: 0.8
+    });
+    this.pizzi.addEffect(verb);
+  }
+
+  private initSpeed(): void {
+    if (this.pizzi.hasOwnProperty('sourceNode')) {
+     this.pizzi.sourceNode.playbackRate.value = this.effectsSettings.speed * .01;
+    }
   }
 
   private playFile(): void {
+    console.log('playFiles', this.pizzi);
     this.pizzi.play();
     this.setOnEnd();
     this.togglePlayClass();
@@ -179,8 +114,41 @@ export class ControlComponent implements OnInit {
     this.togglePlayClass();
   }
 
-  private setIsLoading (setting: Boolean): void {
-    this.playerLoading = setting;
+  private setReverb(): void {
+    if (this.pizzi.effects[0]) {
+      this.pizzi.effects[0].mix = this.effectsSettings.reverbMix;
+    } else {
+      if (this.effectsSettings.reverbMix) {
+        const reverb = new Pizzicato.Effects.Reverb();
+        this.pizzi.addEffect(reverb);
+        this.pizzi.effects[0].mix = this.effectsSettings.reverbMix;
+      } else {
+        const reverb = new Pizzicato.Effects.Reverb();
+        this.pizzi.addEffect(reverb);
+        this.pizzi.effects[0].mix = this.effectsSettings.reverbMix;
+      }
+    }
+  }
+
+  public setEffectsParamsOnPizzi(effectsParams: Settings): void {
+   if (this.pizzi.volume) {
+     this.pizzi.volume = effectsParams.volume * .01;
+   }
+    if (this.pizzi.playbackRate) {
+      this.pizzi.playbackRate = effectsParams.speed * .01;
+    }
+  }
+
+  private setPlaylist(playlist: any): void {
+    this.playlist = playlist;
+  }
+
+  private setOnEnd(): void {
+    this.pizzi.sourceNode.onended = () => {
+      this.pizzi.sourceNode.playbackRate.value = .5;
+
+      this.nextTrackPlay();
+    };
   }
 
   private togglePlayClass(): void {
@@ -191,18 +159,6 @@ export class ControlComponent implements OnInit {
     }
   }
 
-  private setOnEnd(): void {
-    this.pizzi.sourceNode.onended  = () => {
-      this.nextTrackPlay();
-    };
-  }
-
   ngOnInit() {
-   this.initSound(() => {
-     setTimeout(() => {
-
-       }, 3000);
-   });
-   this.setIsLoading(false);
   }
 }

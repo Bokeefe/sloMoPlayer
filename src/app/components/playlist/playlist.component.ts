@@ -1,5 +1,9 @@
+// angular
 import {Component, EventEmitter, Output, OnInit, Input} from '@angular/core';
-import {PlaylistService} from '../../shared/services/playlist.service';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+
+// models
+import {Song} from '../../shared/models/song';
 
 @Component({
   selector: 'app-playlist',
@@ -7,21 +11,22 @@ import {PlaylistService} from '../../shared/services/playlist.service';
   styleUrls: ['./playlist.component.css']
 })
 export class PlaylistComponent implements OnInit {
-  @Input() playlist: any;
+  @Input() playlist: Array<Song>;
 
   @Output() songSelected = new EventEmitter<string>();
 
   constructor() {
-
   }
 
   public songSelect(song: string): void {
     this.songSelected.emit(song);
   }
 
+  public  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.playlist, event.previousIndex, event.currentIndex);
+    console.log(event);
+  }
+
   ngOnInit() {
-    if (localStorage.getItem('playlist')) {
-      this.playlist = JSON.parse(localStorage.getItem('playlist'));
-    }
   }
 }

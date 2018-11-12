@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark display-flex space-between">
     <a class="navbar-brand" href="#" *ngIf="!playerLoading">💀</a>
     <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw color-white" *ngIf="playerLoading"></i>
-    <a ngClass="{{playClass}}" (click)="playPause()" id="play-btn"></a>
+    <a ngClass="{{playClass}}" (click)="togglePlay()" id="play-btn"></a>
     <a (click)="toggleReverb()">🌊</a>
     <a (click)="nextTrackPlay()" class="fa fa-forward"></a>
     <li class="nav-item dropdown position-static">

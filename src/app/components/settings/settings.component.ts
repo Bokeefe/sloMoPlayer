@@ -37,7 +37,6 @@ export class SettingsComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.onSettingsCallback$.emit(this.settingsForm.value);
   }
 
 }
