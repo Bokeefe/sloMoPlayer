@@ -1,4 +1,4 @@
-export class Settings {
+export class EffectsSettings {
 
   private _reverbMix: number;
 

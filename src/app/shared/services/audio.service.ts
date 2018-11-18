@@ -1,4 +1,4 @@
-import { Settings } from './../models/settings';
+import { EffectsSettings } from '../models/effects-settings';
 import { HttpClientService } from './http-client.service';
 // angular
 import {Injectable} from '@angular/core';
@@ -16,6 +16,7 @@ import {Song} from '../models/song';
   providedIn: 'root'
 })
 export class AudioService {
+
   public pizzi: any;
 
   public playlist: Array<Song>;
@@ -32,32 +33,56 @@ export class AudioService {
   public getAudio(id: number): void {
   }
 
-  public play(effectsParams?: Settings): void {
+  public nextTrack(): void {
+    if (this.pizzi.playing)  {
+      this.pizzi.pause();
+      delete this.pizzi;
+    }
+
+    if (this.playlist[0]) {
+      this.playlist.shift();
+    }
+
+    this.play();
+  }
+
+  public pause(): void {
+    if (this.pizzi) {
+      this.pizzi.pause();
+    }
+  }
+
+  public play(effectsSettings?: EffectsSettings): void {
     this.setPlaylist();
 
     if (this.pizzi) {
       delete this.pizzi;
     }
 
-    console.log(this.playlistArray);
     const pizzi = new Pizzicato.Sound({
         source: 'file',
         options: {
             path: this.playlistArray,
-            volume: effectsParams.volume
+            volume: effectsSettings.volume
         }
       }, function() {
         const reverb = new Pizzicato.Effects.Reverb({
             time: 5,
             decay: 0.8,
             reverse: false,
-            mix: effectsParams.reverbMix
+            mix: effectsSettings.reverbMix
         });
         pizzi.addEffect(reverb);
+        pizzi.onended = () => {
+          this.nextTrack();
+        };
+
         pizzi.play();
       });
       setTimeout(() => {
-        pizzi.sourceNode.playbackRate.value = effectsParams.speed;
+        console.log(this.pizzi);
+
+        pizzi.sourceNode.playbackRate.value = effectsSettings.speed;
       }, 2000);
       this.pizzi = pizzi;
   }
@@ -73,6 +98,12 @@ export class AudioService {
   private setPlaylist(): void {
     this.playlist = this._playlistService.playlist;
     this.parsePlaylistPaths();
+  }
+
+  private setOnEnd(): void {
+    this.pizzi.onended = () => {
+      this.nextTrack();
+    };
   }
 
 }
