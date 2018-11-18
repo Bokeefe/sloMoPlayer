@@ -1,4 +1,7 @@
+// angular
 import {Component, DoCheck, EventEmitter, OnInit, Output} from '@angular/core';
+
+// services
 import {PlaylistService} from '../../shared/services/playlist.service';
 
 @Component({
@@ -17,19 +20,14 @@ export class GenreBarComponent implements DoCheck, OnInit {
 
   constructor(private _playlistService: PlaylistService) {
     this.onNewGenre$ =  new EventEmitter<any>();
-
     this.getGenres();
   }
 
   public getGenres(): void {
     this._playlistService.getGenres()
       .subscribe(
-        data => {
-          this.setGenresArray(data);
-        },
-        error => {
-          alert(JSON.parse(error));
-        }
+        data => this.setGenresArray(data),
+        error => alert(JSON.parse(error))
       );
   }
 

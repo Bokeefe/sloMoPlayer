@@ -29,9 +29,10 @@ export class PlayerPageComponent implements OnInit {
   }
 
   public getPlaylist(genre: string): void {
-    this.playlist = this._playlistService.getPlaylist(genre)
+    this.playlist = this._playlistService.getNewPlaylist(genre)
       .subscribe (
         data => {
+          this._playlistService.setCurrentPlaylist(data);
           this.setPlaylist(data);
           this._controlComponent.onNewPlaylist(this.playlist);
         },
@@ -52,11 +53,7 @@ export class PlayerPageComponent implements OnInit {
   private setGenres(): void {
     this._playlistService.getGenres()
       .subscribe(
-        data => {
-          console.log(typeof data, data);
-          this.genres  = data;
-        }
-
+        data => this.genres  = data
       );
   }
 

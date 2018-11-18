@@ -1,5 +1,11 @@
+// angular
 import {EventEmitter, Injectable, Output} from '@angular/core';
+
+// services
 import {HttpClientService} from './http-client.service';
+
+// models
+import {Song} from '../models/song';
 
 @Injectable()
 export class PlaylistService {
@@ -12,9 +18,6 @@ export class PlaylistService {
   public playlist: any;
 
   constructor(private _httpClient: HttpClientService) {
-    if (localStorage.getItem('playlist')) {
-      localStorage.removeItem('playlist');
-    }
     this.newGenre$ = new EventEmitter<any>();
     this.setGenres();
   }
@@ -31,8 +34,12 @@ export class PlaylistService {
     return this._httpClient.GET('/getPlaylist/' + this.getRandGenre());
   }
 
-  public getPlaylist(genre: any): any {
+  public getNewPlaylist(genre: any): any {
     return this._httpClient.GET('/getPlaylist/' + genre);
+  }
+
+  public getPlaylist(): Array<Song> {
+    return this.playlist;
   }
 
 
@@ -44,11 +51,8 @@ export class PlaylistService {
     this.genre = genre;
   }
 
-  public setLocalPlaylist(playlist: any): void {
-    if (localStorage.getItem('playlist')) {
-      localStorage.removeItem('playlist');
-    }
-    localStorage.setItem('playlist', playlist);
+  public setCurrentPlaylist(playlist: Array<Song>): void {
+    this.playlist = playlist;
   }
 
   private randomizePlaylist(playlist: Array<any>): Array<any> {
@@ -56,7 +60,6 @@ export class PlaylistService {
   }
 
   private setGenres(): void {
-
     this.genres =  this._httpClient.GET('/genres/');
   }
 }
