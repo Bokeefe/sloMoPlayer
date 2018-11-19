@@ -34,6 +34,7 @@ export class AudioService {
   }
 
   public nextTrack(): void {
+    console.log('hit nextTrack');
     if (this.pizzi.playing)  {
       this.pizzi.pause();
       delete this.pizzi;

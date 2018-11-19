@@ -2,6 +2,7 @@
 
 # compiled output
 /dist
+/music
 /tmp
 /out-tsc
 /src/assets
