@@ -5,6 +5,8 @@ var path = require('path');
 var express = require('express');
 var cors = require('cors');
 
+var rootMusicDir = './music';
+
 // Read a track dictionary for a music file.
 var trackDict = function(path, fileName, func) {
   musicmetadata(fs.createReadStream(path), function (err, metadata) {
@@ -28,7 +30,7 @@ var readMetadata = function (basedir, func) {
   var walker = walk.walk(basedir);
   walker.on("file", function (root, stats, next) {
     var p = path.join(root, stats.name);
-    var fileName = p.replace('dist/assets/music/', '');
+    var fileName = p.replace('music/', '');
     trackDict(p, fileName,  function (d) {
       console.log(d);
       md.push(d);
@@ -45,7 +47,7 @@ var readMetadata = function (basedir, func) {
 };
 
 // Read the metadata and start the server.
-readMetadata(process.argv[2] || '.', function (tracks) {
+readMetadata(rootMusicDir, function (tracks) {
   let genres = [];
   let playlist = {};
   for(let track of tracks){
@@ -98,6 +100,8 @@ readMetadata(process.argv[2] || '.', function (tracks) {
 
   // AURA API endpoints.
   aura.use("/", express.static(__dirname + '/dist/'));
+  aura.use("/music", express.static(__dirname + '/music/'));
+
 
   aura.get('/genres', jtype, function (req, res) {
     res.json(genres);

@@ -27,7 +27,7 @@ export class AudioService {
   constructor(private _http: HttpClientService, private _playlistService: PlaylistService) {
     this.setPlaylist();
     this.playlistArray = [];
-    this.rootDir = '../../../../assets/music/';
+    this.rootDir = '/music/';
   }
 
   public getAudio(id: number): void {
@@ -72,18 +72,20 @@ export class AudioService {
             reverse: false,
             mix: effectsSettings.reverbMix
         });
+
         pizzi.addEffect(reverb);
-        pizzi.onended = () => {
-          this.nextTrack();
-        };
 
         pizzi.play();
-      });
-      setTimeout(() => {
-        console.log(this.pizzi);
 
+      });
+
+      setTimeout(() => {
+        pizzi.onended = () => {
+          console.log('onEnded set?');
+          this.nextTrack();
+        };
         pizzi.sourceNode.playbackRate.value = effectsSettings.speed;
-      }, 2000);
+      }, 2500);
       this.pizzi = pizzi;
   }
 
@@ -100,8 +102,8 @@ export class AudioService {
     this.parsePlaylistPaths();
   }
 
-  private setOnEnd(): void {
-    this.pizzi.onended = () => {
+  private setOnEnded(): void {
+    this.pizzi.sourceNode.onended = () => {
       this.nextTrack();
     };
   }
