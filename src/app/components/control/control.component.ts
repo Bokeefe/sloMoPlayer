@@ -51,7 +51,7 @@ export class ControlComponent implements OnInit {
     if (this._audioService.hasOwnProperty('pizzi') && this._audioService.pizzi.playing) {
       this._audioService.pause();
     } else {
-      this._audioService.play(this.effectsSettings);
+      this._audioService.play();
       this.setIsPlaying();
     }
   }

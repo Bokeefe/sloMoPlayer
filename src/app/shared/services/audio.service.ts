@@ -1,15 +1,15 @@
-import { EffectsSettings } from '../models/effects-settings';
-import { HttpClientService } from './http-client.service';
 // angular
 import {Injectable} from '@angular/core';
 
 // libraries
 import * as Pizzicato from '../../../../node_modules/pizzicato/distr/Pizzicato.js';
-
+import {Subscription} from 'rxjs/Subscription';
 // services
+import { HttpClientService } from './http-client.service';
 import {PlaylistService} from './playlist.service';
 
 // models
+import { EffectsSettings } from '../models/effects-settings';
 import {Song} from '../models/song';
 
 @Injectable({
@@ -19,6 +19,8 @@ export class AudioService {
 
   public isPlaying: boolean;
 
+  public effectsSettings: EffectsSettings;
+
   public pizzi: any;
 
   public playlist: Array<Song>;
@@ -27,23 +29,28 @@ export class AudioService {
 
   public playlistPosition: number;
 
+  public onEndSub: Subscription;
+
   public rootDir: string;
   constructor(private _http: HttpClientService, private _playlistService: PlaylistService) {
     this.playlistArray = [];
+
     this.playlistPosition = 0;
+    this.effectsSettings = new EffectsSettings(.6, .8, .8);
     this.rootDir = '/music/';
   }
 
   public nextTrack(): void {
     this.playlistPosition++;
-    if (this.pizzi.playing)  {
-      this.pizzi.stop();
-      delete this.pizzi;
+    if ( this.playlistPosition < this.playlistArray.length) {
+      if (this.pizzi.playing)  {
+        this.pizzi.stop();
+        delete this.pizzi;
+        this.play();
+      } else {
+        this.play();
+      }
     }
-
-    setTimeout(() => {
-      this.play();
-    }, 5000);
   }
 
   public pause(): void {
@@ -53,22 +60,22 @@ export class AudioService {
     }
   }
 
-  public play(effectsSettings?: EffectsSettings): void {
+  public play(): void {
     this.setPlaylist(this.playlist ? this.playlist : this._playlistService.getPlaylist());
 
     if (this.pizzi) {
-      console.log(this.playlistPosition, this.playlistArray[0])
-      this.pizzi.play(this.playlistArray, () => {
-        this.setOnEnded();
-      });
+      console.log(this.playlistPosition, this.playlistArray[this.playlistPosition]);
+      this.pizzi.play(this.playlistArray[this.playlistPosition]);
     } else {
       this.initPizzi(new EffectsSettings(.6, .8, .8), () => {
         setTimeout(() => {
-          console.log(this.playlistPosition, this.playlistArray[0])
+          console.log(this.playlistPosition, this.playlistArray[this.playlistPosition]);
           this.pizzi.play();
-          this.pizzi.sourceNode.playbackRate.value = effectsSettings.speed;
-          this.pizzi.sourceNode.onended = function() {
-            this.nextTrack();
+          this.pizzi.sourceNode.playbackRate.value = this.effectsSettings.speed;
+          this.pizzi.sourceNode.onended = () => {
+            setTimeout(() => {
+              this.nextTrack();
+            }, 5000);
           };
         }, 3000);
       });
@@ -76,14 +83,21 @@ export class AudioService {
   }
 
   public setEffects(effectsSettings: EffectsSettings): void {
+    this.effectsSettings = effectsSettings;
+    this.setEffectsOnPizzi();
+  }
+
+  public setEffectsOnPizzi(): void {
     if (this.pizzi.volume) {
-      this.pizzi.volume = effectsSettings.volume * .01;
+      this.pizzi.volume = this.effectsSettings.volume * .01;
     }
+
     if (this.pizzi.effects) {
-      this.pizzi.effects[0].mix = effectsSettings.reverbMix * .01;
+      this.pizzi.effects[0].mix = this.effectsSettings.reverbMix * .01;
     }
+
     if (this.pizzi && this.pizzi.hasOwnProperty('sourceNode')) {
-      this.pizzi.sourceNode.playbackRate.value = effectsSettings.speed * .01;
+      this.pizzi.sourceNode.playbackRate.value = this.effectsSettings.speed * .01;
     }
   }
 
