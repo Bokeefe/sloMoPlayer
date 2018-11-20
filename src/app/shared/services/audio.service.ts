@@ -17,77 +17,95 @@ import {Song} from '../models/song';
 })
 export class AudioService {
 
+  public isPlaying: boolean;
+
   public pizzi: any;
 
   public playlist: Array<Song>;
 
   public playlistArray: Array<string>;
 
+  public playlistPosition: number;
+
   public rootDir: string;
   constructor(private _http: HttpClientService, private _playlistService: PlaylistService) {
-    this.setPlaylist();
     this.playlistArray = [];
+    this.playlistPosition = 0;
     this.rootDir = '/music/';
   }
 
-  public getAudio(id: number): void {
-  }
-
   public nextTrack(): void {
-    console.log('hit nextTrack');
+    this.playlistPosition++;
     if (this.pizzi.playing)  {
-      this.pizzi.pause();
+      this.pizzi.stop();
       delete this.pizzi;
     }
 
-    if (this.playlist[0]) {
-      this.playlist.shift();
-    }
-
-    this.play();
+    setTimeout(() => {
+      this.play();
+    }, 5000);
   }
 
   public pause(): void {
     if (this.pizzi) {
+      this.setIsPlaying(false);
       this.pizzi.pause();
     }
   }
 
   public play(effectsSettings?: EffectsSettings): void {
-    this.setPlaylist();
+    this.setPlaylist(this.playlist ? this.playlist : this._playlistService.getPlaylist());
 
     if (this.pizzi) {
-      delete this.pizzi;
-    }
-
-    const pizzi = new Pizzicato.Sound({
-        source: 'file',
-        options: {
-            path: this.playlistArray,
-            volume: effectsSettings.volume
-        }
-      }, function() {
-        const reverb = new Pizzicato.Effects.Reverb({
-            time: 5,
-            decay: 0.8,
-            reverse: false,
-            mix: effectsSettings.reverbMix
-        });
-
-        pizzi.addEffect(reverb);
-
-        pizzi.play();
-
-      });
-
-      setTimeout(() => {
-        pizzi.onended = () => {
-          console.log('onEnded set?');
+      this.pizzi.play(this.playlistArray, () => {
+        this.pizzi.sourceNode.onended = () => {
           this.nextTrack();
         };
+      });
+    } else {
+      this.initPizzi(new EffectsSettings(.6, .8, .8));
+    }
+  }
+
+  public setEffects(effectsSettings: EffectsSettings): void {
+    if (this.pizzi.volume) {
+      this.pizzi.volume = effectsSettings.volume * .01;
+    }
+    if (this.pizzi.effects) {
+      this.pizzi.effects[0].mix = effectsSettings.reverbMix * .01;
+    }
+    if (this.pizzi && this.pizzi.hasOwnProperty('sourceNode')) {
+      this.pizzi.sourceNode.playbackRate.value = effectsSettings.speed * .01;
+    }
+  }
+
+  private initPizzi(effectsSettings: EffectsSettings): void {
+    const pizzi = new Pizzicato.Sound({
+      source: 'file',
+      options: {
+          path: this.rootDir + this.playlist[this.playlistPosition].path,
+          volume: effectsSettings.volume
+      }
+    }, function() {
+      const reverb = new Pizzicato.Effects.Reverb({
+          time: 5,
+          decay: 0.8,
+          reverse: false,
+          mix: effectsSettings.reverbMix
+      });
+
+      pizzi.addEffect(reverb);
+
+      pizzi.play(() => {
+        this.setIsPlaying(true);
         pizzi.sourceNode.playbackRate.value = effectsSettings.speed;
-      }, 2500);
-      this.pizzi = pizzi;
+        pizzi.sourceNode.onended = () => {
+          this.nextTrack();
+        };
+      });
+    });
+
+    this.pizzi = pizzi;
   }
 
   private parsePlaylistPaths(): void {
@@ -98,15 +116,30 @@ export class AudioService {
     }
   }
 
-  private setPlaylist(): void {
-    this.playlist = this._playlistService.playlist;
+  private shiftPlaylist(): void {
+    if (this.playlist[0]) {
+      this.playlist.shift();
+    }
+    this._playlistService.setCurrentPlaylist(this.playlist);
+    this.parsePlaylistPaths();
+  }
+
+  private setIsPlaying(isPlaying: boolean): void {
+    this.isPlaying = isPlaying;
+  }
+
+  private initPlaylist(): void {
+    this.setPlaylist(this._playlistService.playlist);
+  }
+
+  private setPlaylist(playlist: Array<Song>): void {
+    this.playlist = playlist;
     this.parsePlaylistPaths();
   }
 
   private setOnEnded(): void {
-    this.pizzi.sourceNode.onended = () => {
+    this.pizzi.sourceNode.onended = function() {
       this.nextTrack();
     };
   }
-
 }

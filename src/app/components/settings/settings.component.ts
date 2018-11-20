@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
+import { AudioService } from './../../shared/services/audio.service';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
@@ -12,7 +12,7 @@ export class SettingsComponent implements OnInit, OnChanges {
 
 @Output() onSettingsCallback$: EventEmitter<any>;
 
-  constructor() {
+  constructor(private _audioService: AudioService) {
     this.initSettingsForm();
     this.initFormChangeSub();
     this.onSettingsCallback$ = new EventEmitter<any>();
@@ -20,7 +20,11 @@ export class SettingsComponent implements OnInit, OnChanges {
 
   private initFormChangeSub(): void {
     this.settingsForm.valueChanges.subscribe(
-      data => this.onSettingsCallback$.emit(data)
+      data => {
+        this._audioService.setEffects(data);
+
+        this.onSettingsCallback$.emit(data);
+      }
     );
   }
 
@@ -33,7 +37,8 @@ export class SettingsComponent implements OnInit, OnChanges {
   }
 
 
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.settingsForm.value);
   }
 
   ngOnInit() {
