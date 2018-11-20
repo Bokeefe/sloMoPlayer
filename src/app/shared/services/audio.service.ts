@@ -57,13 +57,21 @@ export class AudioService {
     this.setPlaylist(this.playlist ? this.playlist : this._playlistService.getPlaylist());
 
     if (this.pizzi) {
+      console.log(this.playlistPosition, this.playlistArray[0])
       this.pizzi.play(this.playlistArray, () => {
-        this.pizzi.sourceNode.onended = () => {
-          this.nextTrack();
-        };
+        this.setOnEnded();
       });
     } else {
-      this.initPizzi(new EffectsSettings(.6, .8, .8));
+      this.initPizzi(new EffectsSettings(.6, .8, .8), () => {
+        setTimeout(() => {
+          console.log(this.playlistPosition, this.playlistArray[0])
+          this.pizzi.play();
+          this.pizzi.sourceNode.playbackRate.value = effectsSettings.speed;
+          this.pizzi.sourceNode.onended = function() {
+            this.nextTrack();
+          };
+        }, 3000);
+      });
     }
   }
 
@@ -79,7 +87,8 @@ export class AudioService {
     }
   }
 
-  private initPizzi(effectsSettings: EffectsSettings): void {
+  private initPizzi(effectsSettings: EffectsSettings, callback): void {
+
     const pizzi = new Pizzicato.Sound({
       source: 'file',
       options: {
@@ -95,17 +104,13 @@ export class AudioService {
       });
 
       pizzi.addEffect(reverb);
-
-      pizzi.play(() => {
-        this.setIsPlaying(true);
-        pizzi.sourceNode.playbackRate.value = effectsSettings.speed;
-        pizzi.sourceNode.onended = () => {
-          this.nextTrack();
-        };
-      });
     });
 
+    this.setIsPlaying(true);
+
     this.pizzi = pizzi;
+
+    callback();
   }
 
   private parsePlaylistPaths(): void {
@@ -141,5 +146,6 @@ export class AudioService {
     this.pizzi.sourceNode.onended = function() {
       this.nextTrack();
     };
+    console.log('onended set', this.pizzi.onended);
   }
 }

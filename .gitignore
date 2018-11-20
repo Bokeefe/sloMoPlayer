@@ -2,7 +2,6 @@
 
 # compiled output
 /dist
-/music
 /tmp
 /out-tsc
 /src/assets
@@ -43,3 +42,6 @@ yarn-error.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# music files
+/music
