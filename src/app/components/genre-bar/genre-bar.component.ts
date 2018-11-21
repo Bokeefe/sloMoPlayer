@@ -1,15 +1,16 @@
 // angular
-import {Component, DoCheck, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 
 // services
 import {PlaylistService} from '../../shared/services/playlist.service';
+import {AudioService} from '../../shared/services/audio.service';
 
 @Component({
   selector: 'app-genre-bar',
   templateUrl: './genre-bar.component.html',
   styleUrls: ['./genre-bar.component.css']
 })
-export class GenreBarComponent implements DoCheck, OnInit {
+export class GenreBarComponent implements OnInit {
   @Output() onNewGenre$: EventEmitter<any>;
 
   public activeClass: any;
@@ -18,7 +19,8 @@ export class GenreBarComponent implements DoCheck, OnInit {
 
   public genres: any;
 
-  constructor(private _playlistService: PlaylistService) {
+  constructor(private _audioService: AudioService,
+              private _playlistService: PlaylistService) {
     this.onNewGenre$ =  new EventEmitter<any>();
     this.getGenres();
   }
@@ -32,6 +34,11 @@ export class GenreBarComponent implements DoCheck, OnInit {
   }
 
   public onNewGenre(event: any): void {
+    if (this._audioService.isPlaying) {
+      this._audioService.stop(() => {
+
+      });
+    }
     this.setActiveGenre(event);
   }
 
@@ -54,9 +61,8 @@ export class GenreBarComponent implements DoCheck, OnInit {
     this.genres = genres;
   }
 
-  ngDoCheck() {}
-
   ngOnInit() {
+
 
   }
 }

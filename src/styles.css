@@ -9,7 +9,13 @@ a {
 .space-between {
   justify-content: space-between;
 }
-
+.control-row {
+  display: flex;
+  justify-content: space-between;
+}
+.navbar-control {
+  display: inline;
+}
 .active {
   background-color: rgba(255,255,255,.3);
   border-radius: 10%;

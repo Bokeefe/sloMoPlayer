@@ -5,7 +5,7 @@
           (click)="onNewGenre($event.target.id)"
           color="{{activeGenre === genre ? 'primary' : ''}}"
           id="{{genre}}">
-          {{genre}}
+          {{genre === 'Christmas' ? '🎄' : genre}}
         </mat-chip>
     </div>
   </mat-chip-list>

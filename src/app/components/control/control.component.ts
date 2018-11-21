@@ -44,7 +44,7 @@ export class ControlComponent implements OnInit {
   }
 
   public onToggleReverb() {
-
+    this._audioService.toggleReverb();
   }
 
   public togglePlay(): void {

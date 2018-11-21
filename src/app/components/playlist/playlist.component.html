@@ -3,6 +3,7 @@
       <span>{{[i+1]}}</span>
       <span class="title">{{song.title}}</span>
       <span class="artist ">{{song.artist}}</span>
+    <span><i class="fa fa-x" (click)="deleteSong(i)">X</i></span>
   </div>
 </div>
 <div *ngIf="!playlist">

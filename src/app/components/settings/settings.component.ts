@@ -1,12 +1,16 @@
-import { AudioService } from './../../shared/services/audio.service';
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+// angular
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
+
+// services
+import { AudioService } from './../../shared/services/audio.service';
+
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.css']
 })
-export class SettingsComponent implements OnInit, OnChanges {
+export class SettingsComponent implements OnInit {
 
 @Input() settingsForm: FormGroup;
 
@@ -30,15 +34,10 @@ export class SettingsComponent implements OnInit, OnChanges {
 
   private initSettingsForm(): void {
     this.settingsForm = new FormGroup({
-      speed: new FormControl(80),
+      speed: new FormControl(70),
       volume: new FormControl(80),
       reverbMix: new FormControl(60),
     });
-  }
-
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.settingsForm.value);
   }
 
   ngOnInit() {

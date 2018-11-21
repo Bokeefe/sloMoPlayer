@@ -21,8 +21,8 @@ export class PlaylistComponent implements OnInit {
   constructor(private _playlistService: PlaylistService) {
   }
 
-  public songSelect(song: string): void {
-    this.songSelected.emit(song);
+  public deleteSong(event: number): void {
+    this.playlist.splice(event, 1);
   }
 
   public  drop(event: CdkDragDrop<string[]>) {

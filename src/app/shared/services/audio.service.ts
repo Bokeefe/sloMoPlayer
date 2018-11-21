@@ -4,6 +4,7 @@ import {Injectable} from '@angular/core';
 // libraries
 import * as Pizzicato from '../../../../node_modules/pizzicato/distr/Pizzicato.js';
 import {Subscription} from 'rxjs/Subscription';
+
 // services
 import { HttpClientService } from './http-client.service';
 import {PlaylistService} from './playlist.service';
@@ -29,14 +30,12 @@ export class AudioService {
 
   public playlistPosition: number;
 
-  public onEndSub: Subscription;
-
   public rootDir: string;
   constructor(private _http: HttpClientService, private _playlistService: PlaylistService) {
     this.playlistArray = [];
 
     this.playlistPosition = 0;
-    this.effectsSettings = new EffectsSettings(.6, .8, .8);
+    this.effectsSettings = new EffectsSettings(.6, .7, .8);
     this.rootDir = '/music/';
   }
 
@@ -75,7 +74,7 @@ export class AudioService {
           this.pizzi.sourceNode.onended = () => {
             setTimeout(() => {
               this.nextTrack();
-            }, 5000);
+            }, 3000);
           };
         }, 3000);
       });
@@ -98,6 +97,22 @@ export class AudioService {
 
     if (this.pizzi && this.pizzi.hasOwnProperty('sourceNode')) {
       this.pizzi.sourceNode.playbackRate.value = this.effectsSettings.speed * .01;
+    }
+  }
+
+  public stop (callback: Function): void {
+    this.setIsPlaying(false);
+    this.pizzi.stop();
+    delete this.pizzi;
+
+    callback();
+  }
+
+  public toggleReverb(): void {
+    if (this.pizzi.hasOwnProperty('effects') && this.pizzi.effects[0].mix === 0) {
+      this.setEffects(this.effectsSettings);
+    } else if (this.pizzi.hasOwnProperty('effects') && this.pizzi.effects[0].mix !== 0) {
+      this.setEffects(new EffectsSettings(0, this.effectsSettings.speed, this.effectsSettings.volume));
     }
   }
 
