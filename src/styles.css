@@ -40,6 +40,12 @@ a {
 .first-btn {
   margin-left: 0 !important;
 }
+.genre-bar {
+  position: fixed;
+  bottom: 0;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, .7);
+}
 .genre-chip-list {
   width: 100%;
 }

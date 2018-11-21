@@ -32,7 +32,6 @@ var readMetadata = function (basedir, func) {
     var p = path.join(root, stats.name);
     var fileName = p.replace('music/', '');
     trackDict(p, fileName,  function (d) {
-      console.log(d);
       md.push(d);
     });
 
@@ -136,6 +135,5 @@ readMetadata(rootMusicDir, function (tracks) {
   var server = app.listen(3000, function () {
     var host = server.address().address;
     var port = server.address().port;
-    console.log('http://localhost:'+ port);
   });
 });

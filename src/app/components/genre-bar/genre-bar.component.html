@@ -1,13 +1,14 @@
-<nav class="navbar navbar-expand-lg fixed-bottom navbar-dark">
+<div class="genre-bar">
   <mat-chip-list class="genre-chip-list">
     <div *ngFor="let genre of genres">
-        <mat-chip
-          (click)="onNewGenre($event.target.id)"
-          color="{{activeGenre === genre ? 'primary' : ''}}"
-          id="{{genre}}">
-          {{genre === 'Christmas' ? '🎄' : genre}}
-        </mat-chip>
+      <mat-chip
+        (click)="onNewGenre($event.target.id)"
+        color="{{activeGenre === genre ? 'primary' : ''}}"
+        id="{{genre}}">
+        {{genre === 'Christmas' ? '🎄' : genre}}
+      </mat-chip>
     </div>
   </mat-chip-list>
-</nav>
+</div>
+
 
