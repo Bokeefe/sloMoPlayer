@@ -24,12 +24,6 @@ a {
   text-align: center;
 }
 
-.playlist-items {
-  list-style: none;
-  width: 85%;
-  margin: 0 auto;
-
-}
 #play-btn{
   font-size:42px;
 }
@@ -56,14 +50,16 @@ a {
 justify-content: space-evenly;
 }
 .playlist-items {
-  width: 100%;
-  max-width: 100%;
   border: solid 1px #ccc;
   min-height: 60px;
   display: block;
   background: white;
   border-radius: 4px;
   overflow: hidden;
+  list-style: none;
+  width: 85%;
+  margin: 0 auto;
+  max-width: 800px;
 }
 
 .playlist-box {
