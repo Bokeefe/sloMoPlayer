@@ -37,7 +37,7 @@ export class PlayerPageComponent implements OnInit {
           this._controlComponent.onNewPlaylist(this.playlist);
         },
         error => {
-          alert(JSON.parse(error));
+          alert(error);
         }
       );
   }

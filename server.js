@@ -132,7 +132,7 @@ readMetadata(rootMusicDir, function (tracks) {
   var app = express();
   app.use('/', aura);
 
-  var server = app.listen(3000, '127.0.0.1', function () {
+  var server = app.listen(3000, '0.0.0.0', function () {
     var host = server.address().address;
     var port = server.address().port;
     console.log(host + ':' +  port);

@@ -26,6 +26,8 @@ a {
 
 .playlist-items {
   list-style: none;
+  width: 85%;
+  margin: 0 auto;
 
 }
 #play-btn{
