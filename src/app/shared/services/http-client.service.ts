@@ -11,7 +11,7 @@ import {Observable} from 'rxjs/Observable';
 @Injectable()
 export class HttpClientService {
   constructor(private http: HttpClient) { }
-  private baseUrl: string = 'http://localhost:3000';
+  private baseUrl: string = 'http://slomo.world';
 
   public GET(url: string): Observable<any> {
     const token = localStorage.getItem('token');
