@@ -29,7 +29,7 @@ export class GenreBarComponent implements OnInit {
     this._playlistService.getGenres()
       .subscribe(
         data => this.setGenresArray(data),
-        error => console.log(JSON.parse(error));
+        error => console.log(JSON.parse(error))
       );
   }
 
