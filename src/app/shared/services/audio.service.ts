@@ -3,7 +3,6 @@ import {Injectable} from '@angular/core';
 
 // libraries
 import * as Pizzicato from '../../../../node_modules/pizzicato/distr/Pizzicato.js';
-import {Subscription} from 'rxjs/Subscription';
 
 // services
 import { HttpClientService } from './http-client.service';
@@ -70,12 +69,15 @@ export class AudioService {
         setTimeout(() => {
           console.log(this.playlistPosition, this.playlistArray[this.playlistPosition]);
           this.pizzi.play();
-          this.pizzi.sourceNode.playbackRate.value = this.effectsSettings.speed;
-          this.pizzi.sourceNode.onended = () => {
-            setTimeout(() => {
-              this.nextTrack();
-            }, 3000);
-          };
+          console.log(this.pizzi);
+          if (this.pizzi.hasOwnProperty('sourceNode') && this.pizzi.sourceNode.length){
+            this.pizzi.sourceNode.playbackRate.value = this.effectsSettings.speed;
+            this.pizzi.sourceNode.onended = () => {
+              setTimeout(() => {
+                this.nextTrack();
+              }, 3000);
+            };
+          }
         }, 3000);
       });
     }
