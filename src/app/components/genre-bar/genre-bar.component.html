@@ -1,5 +1,7 @@
 <div class="genre-bar">
   <mat-chip-list class="genre-chip-list">
+    <mat-chip (click)="onNewGenre('Jazz')">Jazz</mat-chip>
+
     <div *ngFor="let genre of genres">
       <mat-chip
         (click)="onNewGenre($event.target.id)"
@@ -7,6 +9,8 @@
         id="{{genre}}">
         {{genre === 'Christmas' ? '🎄' : genre}}
       </mat-chip>
+
+
     </div>
   </mat-chip-list>
 </div>

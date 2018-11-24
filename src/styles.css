@@ -45,6 +45,7 @@ a {
   bottom: 0;
   padding: 15px;
   background-color: rgba(0, 0, 0, .7);
+  width:100%;
 }
 .genre-chip-list {
   width: 100%;
