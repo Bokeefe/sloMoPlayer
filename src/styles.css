@@ -12,6 +12,8 @@ a {
 .control-row {
   display: flex;
   justify-content: space-between;
+  max-width: 800px;
+  margin: 0 auto;
 }
 .navbar-control {
   display: inline;
@@ -50,7 +52,7 @@ a {
 justify-content: space-evenly;
 }
 .playlist-items {
-  border: solid 1px #ccc;
+  border: none;
   min-height: 60px;
   display: block;
   background: white;

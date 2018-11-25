@@ -5,11 +5,11 @@ import {Injectable} from '@angular/core';
 import * as Pizzicato from '../../../../node_modules/pizzicato/distr/Pizzicato.js';
 
 // services
-import { HttpClientService } from './http-client.service';
+import {HttpClientService} from './http-client.service';
 import {PlaylistService} from './playlist.service';
 
 // models
-import { EffectsSettings } from '../models/effects-settings';
+import {EffectsSettings} from '../models/effects-settings';
 import {Song} from '../models/song';
 
 @Injectable({
@@ -77,7 +77,7 @@ export class AudioService {
               }, 5000);
             };
           }
-        }, 8000);
+        }, 10000);
       });
     }
   }

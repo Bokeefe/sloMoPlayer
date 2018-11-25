@@ -9,5 +9,9 @@ li > span {
   justify-content: center;
 }
 .playlist-items {
-  padding-top: 80px;
+  padding: 80px 0;
+}
+.artist {
+  font-weight: 900;
+  text-transform: uppercase;
 }

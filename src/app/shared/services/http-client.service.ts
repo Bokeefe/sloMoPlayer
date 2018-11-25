@@ -15,7 +15,6 @@ export class HttpClientService {
 
 
   public GET(url: string): Observable<any> {
-    console.log(this.baseUrl);
     const token = localStorage.getItem('token');
     const options = {
       headers: new HttpHeaders({
