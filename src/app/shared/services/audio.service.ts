@@ -62,23 +62,22 @@ export class AudioService {
     this.setPlaylist(this.playlist ? this.playlist : this._playlistService.getPlaylist());
 
     if (this.pizzi) {
-      console.log(this.playlistPosition, this.playlistArray[this.playlistPosition]);
       this.pizzi.play(this.playlistArray[this.playlistPosition]);
     } else {
       this.initPizzi(new EffectsSettings(.6, .8, .8), () => {
         setTimeout(() => {
-          console.log(this.playlistPosition, this.playlistArray[this.playlistPosition]);
           this.pizzi.play();
-          console.log(this.pizzi);
-          if (this.pizzi.hasOwnProperty('sourceNode') && this.pizzi.sourceNode.length){
+          this.setIsPlaying(true);
+
+          if (this.pizzi.hasOwnProperty('sourceNode') && this.pizzi.sourceNode.length) {
             this.pizzi.sourceNode.playbackRate.value = this.effectsSettings.speed;
             this.pizzi.sourceNode.onended = () => {
               setTimeout(() => {
                 this.nextTrack();
-              }, 3000);
+              }, 5000);
             };
           }
-        }, 3000);
+        }, 8000);
       });
     }
   }
@@ -136,8 +135,6 @@ export class AudioService {
 
       pizzi.addEffect(reverb);
     });
-
-    this.setIsPlaying(true);
 
     this.pizzi = pizzi;
 
