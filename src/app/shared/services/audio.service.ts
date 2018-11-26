@@ -11,6 +11,7 @@ import {PlaylistService} from './playlist.service';
 // models
 import {EffectsSettings} from '../models/effects-settings';
 import {Song} from '../models/song';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +37,14 @@ export class AudioService {
     this.playlistPosition = 0;
     this.effectsSettings = new EffectsSettings(.6, .7, .8);
     this.rootDir = '/music/';
+  }
+
+  public getPizzi(): Pizzicato.Sound {
+    return this.pizzi;
+  }
+
+  public getPlaylistPosition(): number {
+    return this.playlistPosition;
   }
 
   public nextTrack(): void {

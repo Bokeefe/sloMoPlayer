@@ -32,6 +32,7 @@ var readMetadata = function (basedir, func) {
     var p = path.join(root, stats.name);
     var fileName = p.replace('music/', '');
     trackDict(p, fileName,  function (d) {
+      // console.log(d);
       md.push(d);
     });
 
@@ -94,6 +95,8 @@ readMetadata(rootMusicDir, function (tracks) {
       playlist[currentIndex] = playlist[randomIndex];
       playlist[randomIndex] = temporaryValue;
     }
+
+    playlist = playlist.slice(0, 30)
     return playlist;
   };
 
@@ -112,9 +115,8 @@ readMetadata(rootMusicDir, function (tracks) {
     res.json(playlist);
   });
   aura.get('/getPlaylist/:genre', jtype, function (req, res) {
-    var maxThirtyPlaylist = playlist[req.params.genre].slice(0, 30);
-    shuffle(maxThirtyPlaylist);
-    res.json(maxThirtyPlaylist);
+    shuffle(playlist[req.params.genre]);
+    res.json(playlist[req.params.genre].slice(0, 30));
   });
   aura.get('/tracks/:id', jtype, loadTrack, function (req, res) {
     res.json(req.track);

@@ -1,6 +1,12 @@
-.navbar{
-  background-color: black;
-  color: white;
-  font-size: 24px;
-  overflow: auto;
+.genre-bar {
+  position: fixed;
+  bottom: 0;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, .7);
+  width:100%;
+  display: flex;
+  justify-content: center;
+}
+.genre-chip-list {
+
 }

@@ -5,7 +5,7 @@
     <a ngClass="{{isPlaying ? 'fa fa-pause' : 'fa fa-play'}}" (click)="togglePlay()" id="play-btn"
        style="margin-top:10px;"></a>
     <!--<a (click)="onToggleReverb()">🌊</a>-->
-    <a (click)="nextTrackPlay()" class="fa fa-forward" style="margin-top:10px;"></a>
+    <a (click)="nextTrackPlay()" class="fa fa-forward" style="margin-top:15px;"></a>
     <li class="nav-item dropdown position-static">
       <a class="nav-link dropdown-toggle"
          href="#"
@@ -21,8 +21,9 @@
       </div>
     </li>
   </div>
-  <!--<div class="control-row">-->
-  <!--<mat-progress-bar mode="{{playerLoading ? 'buffer' : ''}}" value="0"></mat-progress-bar>-->
-  <!--</div>-->
+  <div class="control-row">
+    <mat-progress-bar mode="buffer" value="0"></mat-progress-bar>
+  </div>
 </nav>
+
 

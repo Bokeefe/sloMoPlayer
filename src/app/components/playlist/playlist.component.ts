@@ -7,6 +7,7 @@ import {PlaylistService} from '../../shared/services/playlist.service';
 
 // models
 import {Song} from '../../shared/models/song';
+import {AudioService} from '../../shared/services/audio.service';
 
 @Component({
   selector: 'app-playlist',
@@ -18,7 +19,9 @@ export class PlaylistComponent implements OnInit {
 
   @Output() songSelected = new EventEmitter<string>();
 
-  constructor(private _playlistService: PlaylistService) {
+  public playlistPosition: number;
+
+  constructor(private _audioService: AudioService, private _playlistService: PlaylistService) {
   }
 
   public deleteSong(event: number): void {
@@ -33,6 +36,7 @@ export class PlaylistComponent implements OnInit {
 
   private getPlaylist(): void {
     this.playlist = this._playlistService.getPlaylist();
+    this.playlistPosition = this._audioService.getPlaylistPosition();
   }
 
   ngOnInit() {

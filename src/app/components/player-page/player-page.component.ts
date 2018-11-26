@@ -34,10 +34,9 @@ export class PlayerPageComponent implements OnInit {
         data => {
           this._playlistService.setCurrentPlaylist(data);
           this.setPlaylist(data);
-          this._controlComponent.onNewPlaylist(this.playlist);
         },
         error => {
-          alert(error);
+          alert(JSON.parse(error));
         }
       );
   }

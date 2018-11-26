@@ -1,6 +1,7 @@
 <div cdkDropList class="playlist-items" (cdkDropListDropped)="drop($event)">
-  <div class="playlist-box" *ngFor="let song of playlist; let i = index" cdkDrag>
-    <span>{{[i+1]}}</span>
+  <div class="playlist-box" *ngFor="let song of playlist; let i = index"
+       [ngClass]="" cdkDrag>
+  <span>{{[i+1]}}</span>
     <span class="title">{{song.title}}</span>
     <span class="artist ">{{song.artist}}</span>
     <span>
@@ -10,6 +11,6 @@
 </div>
 <div *ngIf="!playlist">
   <div class="pick">
-    <h1>Pick a genre</h1>
+    <span>👇🏽</span>
   </div>
 </div>
