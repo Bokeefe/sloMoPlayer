@@ -7,6 +7,7 @@ import {PlaylistService} from '../../shared/services/playlist.service';
 
 // models
 import {EffectsSettings} from '../../shared/models/effects-settings';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-control',
@@ -24,10 +25,22 @@ export class ControlComponent implements OnInit {
 
   public effectsSettings: EffectsSettings;
 
+  private timeSub: Subscription;
+
+  public timePosition: Object;
+
   constructor(private _audioService: AudioService,
               private _playlistService: PlaylistService) {
-        this.effectsSettings = new EffectsSettings(.6, .8, .8);
-        this.setIsPlaying(false);
+    this.effectsSettings = new EffectsSettings(.6, .8, .8);
+    this.setIsPlaying(false);
+    this.timePosition = {
+      current: 0,
+      duration: 0
+    };
+  }
+
+  public initTimeSub(): void {
+
   }
 
   public nextTrackPlay(): void {
@@ -44,8 +57,6 @@ export class ControlComponent implements OnInit {
       this.setIsPlaying(true);
     } else {
       this._audioService.play();
-      const test = this._audioService.getPizzi();
-      console.log(test.sourceNode.context.currentTime);
       this.setIsPlaying(true);
     }
   }
@@ -56,6 +67,10 @@ export class ControlComponent implements OnInit {
 
   private setIsPlaying(isPlaying): void {
     this.isPlaying = isPlaying;
+  }
+
+  private setTimePosition(timePosition: Object): void {
+    this.timePosition = timePosition;
   }
 
   ngOnInit() {

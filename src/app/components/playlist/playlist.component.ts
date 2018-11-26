@@ -21,7 +21,8 @@ export class PlaylistComponent implements OnInit {
 
   public playlistPosition: number;
 
-  constructor(private _audioService: AudioService, private _playlistService: PlaylistService) {
+  constructor(private _audioService: AudioService,
+              private _playlistService: PlaylistService) {
   }
 
   public deleteSong(event: number): void {

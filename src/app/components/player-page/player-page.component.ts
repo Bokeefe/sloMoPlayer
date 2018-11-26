@@ -52,11 +52,11 @@ export class PlayerPageComponent implements OnInit {
   private setGenres(): void {
     this._playlistService.getGenres()
       .subscribe(
-        data => this.genres  = data
+        data => this.genres = data
       );
   }
 
   ngOnInit() {
-
+    this.getPlaylist('Christmas');
   }
 }

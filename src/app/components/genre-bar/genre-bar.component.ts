@@ -34,21 +34,10 @@ export class GenreBarComponent implements OnInit {
   }
 
   public onNewGenre(event: any): void {
-    if (this._audioService.isPlaying) {
-      this._audioService.stop(() => {
+    this._audioService.stop(() => {
 
-      });
-    }
+    });
     this.setActiveGenre(event);
-  }
-
-  private getRandGenre(): number {
-    return Math.floor(Math.random() * this.genres.length);
-  }
-
-  private setActiveClass(): void {
-    this.activeClass = this.activeGenre.field;
-    this.onNewGenre$.emit(this.activeGenre);
   }
 
   private setActiveGenre(genre: number): void {
@@ -62,7 +51,5 @@ export class GenreBarComponent implements OnInit {
   }
 
   ngOnInit() {
-
-
   }
 }

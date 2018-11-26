@@ -35,6 +35,7 @@ export class PlaylistService {
   }
 
   public getNewPlaylist(genre: any): any {
+    delete this.playlist;
     return this._httpClient.GET('/getPlaylist/' + genre);
   }
 
