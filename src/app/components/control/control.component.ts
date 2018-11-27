@@ -39,10 +39,6 @@ export class ControlComponent implements OnInit {
     };
   }
 
-  public initTimeSub(): void {
-
-  }
-
   public nextTrackPlay(): void {
     this._audioService.nextTrack();
   }
@@ -54,7 +50,7 @@ export class ControlComponent implements OnInit {
   public togglePlay(): void {
     if (this._audioService.hasOwnProperty('pizzi') && this._audioService.pizzi.playing) {
       this._audioService.pause();
-      this.setIsPlaying(true);
+      this.setIsPlaying(false);
     } else {
       this._audioService.play();
       this.setIsPlaying(true);
