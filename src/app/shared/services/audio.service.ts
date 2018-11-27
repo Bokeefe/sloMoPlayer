@@ -17,7 +17,7 @@ import {Observable} from 'rxjs';
   providedIn: 'root'
 })
 export class AudioService {
-  @Output() timePosition$: EventEmitter<Object>;
+  @Output() isPlaying$: EventEmitter<boolean>;
 
   public effectsSettings: EffectsSettings;
 
@@ -35,7 +35,7 @@ export class AudioService {
               private _playlistService: PlaylistService) {
     this.playlistArray = [];
     this.playlistPosition = 0;
-    this.timePosition$ = new EventEmitter<Object>();
+    this.initEventEmitters();
     this.effectsSettings = new EffectsSettings(.7, .7, .8);
     this.rootDir = '/music/';
   }
@@ -50,30 +50,45 @@ export class AudioService {
 
   public nextTrack(): void {
     this.playlistPosition++;
-    if (this.playlistPosition < this.playlistArray.length) {
-      if (this.pizzi.playing) {
-        this.pizzi.stop();
-        delete this.pizzi;
-        this.play();
-      } else {
-        this.play();
-      }
+
+    if (this.playlistPosition <= this.playlistArray.length) {
+      setTimeout(() => {
+        if (this.pizzi.playing) {
+          this.pizzi.stop();
+          this.isPlaying$.emit(false);
+          delete this.pizzi;
+          this.play();
+          this.isPlaying$.emit(true);
+
+        } else {
+          this.play();
+          this.isPlaying$.emit(true);
+
+        }
+      }, 5000);
+    } else {
+      this.pizzi.stop();
+      this.isPlaying$.emit(false);
+
     }
   }
 
   public pause(): void {
     if (this.pizzi) {
       this.pizzi.pause();
+      this.isPlaying$.emit(false);
+
     }
   }
 
   public play(): void {
-    this.setPlaylist(this.playlist ? this.playlist : this._playlistService.getPlaylist());
+    this.setPlaylist(this._playlistService.getPlaylist());
 
     console.log(this.playlistArray[this.playlistPosition]);
 
     if (this.pizzi) {
       this.pizzi.play(this.playlistArray[this.playlistPosition]);
+      this.isPlaying$.emit(true);
     } else {
         this.initPizzi(new EffectsSettings(.7, .7, .8), () => {
           setTimeout(() => {
@@ -107,6 +122,8 @@ export class AudioService {
   public stop(callback: Function): void {
     if (this.pizzi) {
       this.pizzi.stop();
+      this.isPlaying$.emit(false);
+
       delete this.pizzi;
     }
     callback();
@@ -146,11 +163,18 @@ export class AudioService {
       console.log(pizzi.sourceNode.playbackRate.value);
     });
     this.pizzi = pizzi;
+    this.isPlaying$.emit(true);
+
 
     callback();
   }
 
+  private initEventEmitters(): void {
+    this.isPlaying$ = new EventEmitter<boolean>();
+  }
+
   private parsePlaylistPaths(): void {
+    this.playlistArray = [];
     if (this.playlist) {
       for (let song of this._playlistService.playlist) {
         this.playlistArray.push(this.rootDir + song.path);
@@ -158,27 +182,9 @@ export class AudioService {
     }
   }
 
-  private shiftPlaylist(): void {
-    if (this.playlist[0]) {
-      this.playlist.shift();
-    }
-    this._playlistService.setCurrentPlaylist(this.playlist);
-    this.parsePlaylistPaths();
-  }
-
-  private initPlaylist(): void {
-    this.setPlaylist(this._playlistService.playlist);
-  }
-
   private setPlaylist(playlist: Array<Song>): void {
+    this.playlist = [];
     this.playlist = playlist;
     this.parsePlaylistPaths();
-  }
-
-  private setOnEnded(): void {
-    this.pizzi.sourceNode.onended = function () {
-      this.nextTrack();
-    };
-    console.log('onended set', this.pizzi.onended);
   }
 }

@@ -1,5 +1,6 @@
 // angular
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {MatDialog, MatSnackBar, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 // services
 import {AudioService} from '../../shared/services/audio.service';
@@ -14,7 +15,7 @@ import {Subscription} from 'rxjs';
   templateUrl: './control.component.html',
   styleUrls: ['./control.component.css']
 })
-export class ControlComponent implements OnInit {
+export class ControlComponent implements OnDestroy, OnInit {
   @Input() playlist: any;
 
   public isPlaying: boolean;
@@ -25,20 +26,22 @@ export class ControlComponent implements OnInit {
 
   public effectsSettings: EffectsSettings;
 
-  private timeSub: Subscription;
+  private isPlayingSub: Subscription;
 
   public timePosition: Object;
 
-  constructor(private _audioService: AudioService,
+  constructor(public _snackBar: MatSnackBar, private _audioService: AudioService,
               private _playlistService: PlaylistService) {
     this.effectsSettings = new EffectsSettings(.6, .8, .8);
-    this.setIsPlaying(false);
-    this.timePosition = {
-      current: 0,
-      duration: 0
-    };
+    this.isPlayingSub = this._audioService.isPlaying$.subscribe(
+      data => this.setIsPlaying(data)
+    );
   }
-
+  public openSnackBar(message: string, action: string) {
+    this._snackBar.open(message, action, {
+      duration: 2000,
+    });
+  }
   public nextTrackPlay(): void {
     this._audioService.nextTrack();
   }
@@ -69,6 +72,11 @@ export class ControlComponent implements OnInit {
     this.timePosition = timePosition;
   }
 
+  ngOnDestroy(): void {
+    this.isPlayingSub.unsubscribe();
+  }
+
   ngOnInit() {
   }
+
 }

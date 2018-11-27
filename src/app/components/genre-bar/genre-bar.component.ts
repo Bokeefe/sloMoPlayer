@@ -34,6 +34,7 @@ export class GenreBarComponent implements OnInit {
   }
 
   public onNewGenre(event: any): void {
+    this._playlistService.deletePlaylist();
     this._audioService.stop(() => {
 
     });

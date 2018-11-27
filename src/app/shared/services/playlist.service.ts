@@ -22,6 +22,10 @@ export class PlaylistService {
     this.setGenres();
   }
 
+  public deletePlaylist(): void {
+    this.setCurrentPlaylist([]);
+  }
+
   public getGenres(): any {
     return this._httpClient.GET('/genres/');
   }

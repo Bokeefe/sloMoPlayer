@@ -4,7 +4,8 @@ import {BrowserModule} from '@angular/platform-browser';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { NgModule } from '@angular/core';
-import {MatChipsModule, MatProgressBarModule} from '@angular/material';
+import {MatChipsModule, MatSnackBarModule, MatProgressBarModule, MatSliderModule} from '@angular/material';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 // components
 import {AppComponent} from './app.component';
@@ -30,9 +31,12 @@ import {HttpClientService } from './shared/services/http-client.service';
     SettingsComponent
   ],
   imports: [
+    BrowserAnimationsModule,
     DragDropModule,
     MatChipsModule,
+    MatSnackBarModule,
     MatProgressBarModule,
+    MatSliderModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,
