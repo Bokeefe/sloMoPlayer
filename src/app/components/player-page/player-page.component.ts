@@ -1,5 +1,6 @@
 // angular
 import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {MatSnackBar} from '@angular/material';
 
 // services
 import {PlaylistService} from '../../shared/services/playlist.service';
@@ -22,7 +23,8 @@ export class PlayerPageComponent implements OnInit {
 
   public genres: any;
 
-  constructor(private _playlistService: PlaylistService,
+  constructor(public _snackBar: MatSnackBar,
+              private _playlistService: PlaylistService,
               private _controlComponent: ControlComponent) {
     this.newPlaylist$ = new EventEmitter<any>();
     this.setGenres();
@@ -32,13 +34,19 @@ export class PlayerPageComponent implements OnInit {
     this.playlist = this._playlistService.getNewPlaylist(genre)
       .subscribe (
         data => {
+          console.log(data);
           this._playlistService.setCurrentPlaylist(data);
           this.setPlaylist(data);
         },
         error => {
-          alert(JSON.parse(error));
+          console.log('error', error);
         }
       );
+  }
+  public openSnackBar(error) {
+    this._snackBar.open('lorem', 'OKAY', {
+      duration: 5000,
+    });
   }
 
   public onSelect(song: any): void {

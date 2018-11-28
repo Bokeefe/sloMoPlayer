@@ -18,6 +18,8 @@ import {Observable} from 'rxjs';
 })
 export class AudioService {
   @Output() isPlaying$: EventEmitter<boolean>;
+  @Output() isLoading$: EventEmitter<boolean>;
+
 
   public effectsSettings: EffectsSettings;
 
@@ -49,6 +51,7 @@ export class AudioService {
   }
 
   public nextTrack(): void {
+    this.isLoading$.emit(true);
     this.playlistPosition++;
 
     if (this.playlistPosition <= this.playlistArray.length) {
@@ -61,9 +64,7 @@ export class AudioService {
           this.isPlaying$.emit(true);
 
         } else {
-          this.play();
-          this.isPlaying$.emit(true);
-
+          this.isPlaying$.emit(false);
         }
       }, 5000);
     } else {
@@ -82,12 +83,14 @@ export class AudioService {
   }
 
   public play(): void {
+
     this.setPlaylist(this._playlistService.getPlaylist());
 
     console.log(this.playlistArray[this.playlistPosition]);
 
     if (this.pizzi) {
       this.pizzi.play(this.playlistArray[this.playlistPosition]);
+      this.isLoading$.emit(false);
       this.isPlaying$.emit(true);
     } else {
         this.initPizzi(new EffectsSettings(.7, .7, .8), () => {
@@ -95,7 +98,7 @@ export class AudioService {
             this.pizzi.sourceNode.onended = () => {
               this.nextTrack();
             };
-          }, 10000);
+          }, 20000);
       });
     }
   }
@@ -171,6 +174,7 @@ export class AudioService {
 
   private initEventEmitters(): void {
     this.isPlaying$ = new EventEmitter<boolean>();
+    this.isLoading$ = new EventEmitter<boolean>();
   }
 
   private parsePlaylistPaths(): void {

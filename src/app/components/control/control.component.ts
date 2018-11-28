@@ -26,6 +26,8 @@ export class ControlComponent implements OnDestroy, OnInit {
 
   public effectsSettings: EffectsSettings;
 
+  private isLoadingSub: Subscription;
+
   private isPlayingSub: Subscription;
 
   public timePosition: Object;
@@ -33,15 +35,14 @@ export class ControlComponent implements OnDestroy, OnInit {
   constructor(public _snackBar: MatSnackBar, private _audioService: AudioService,
               private _playlistService: PlaylistService) {
     this.effectsSettings = new EffectsSettings(.6, .8, .8);
+    this.isLoadingSub = this._audioService.isLoading$.subscribe(
+      data => this.setIsLoading(data)
+    );
     this.isPlayingSub = this._audioService.isPlaying$.subscribe(
       data => this.setIsPlaying(data)
     );
   }
-  public openSnackBar(message: string, action: string) {
-    this._snackBar.open(message, action, {
-      duration: 2000,
-    });
-  }
+
   public nextTrackPlay(): void {
     this._audioService.nextTrack();
   }
@@ -64,6 +65,10 @@ export class ControlComponent implements OnDestroy, OnInit {
     this.effectsSettings = effectsSettings;
   }
 
+  private setIsLoading(isLoading): void {
+    this.isLoading = isLoading;
+  }
+
   private setIsPlaying(isPlaying): void {
     this.isPlaying = isPlaying;
   }
@@ -74,6 +79,7 @@ export class ControlComponent implements OnDestroy, OnInit {
 
   ngOnDestroy(): void {
     this.isPlayingSub.unsubscribe();
+    this.isLoadingSub.unsubscribe();
   }
 
   ngOnInit() {

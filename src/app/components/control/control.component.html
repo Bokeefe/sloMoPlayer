@@ -4,7 +4,6 @@
     <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw color-white" *ngIf="playerLoading"></i>
     <a ngClass="{{isPlaying ? 'fa fa-pause' : 'fa fa-play'}}" (click)="togglePlay()" id="play-btn"
        style="margin-top:10px;"></a>
-    <!--<a (click)="onToggleReverb()">🌊</a>-->
     <a (click)="nextTrackPlay()" class="fa fa-forward" style="margin-top:15px;"></a>
     <li class="nav-item dropdown position-static">
       <a class="nav-link dropdown-toggle"
@@ -21,9 +20,9 @@
       </div>
     </li>
   </div>
-  <!--<div class="control-row">-->
-    <!--<mat-progress-bar mode="buffer" value="{{(timePosition.current / timePosition.duration) * 100 }}"></mat-progress-bar>-->
-  <!--</div>-->
+  <div class="control-row">
+    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+  </div>
 </nav>
 
 
