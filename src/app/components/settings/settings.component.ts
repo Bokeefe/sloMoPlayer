@@ -5,6 +5,9 @@ import {FormControl, FormGroup} from '@angular/forms';
 // services
 import { AudioService } from './../../shared/services/audio.service';
 
+// models
+import { EffectsSettings } from './../../shared/models/effects-settings';
+
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
@@ -25,8 +28,12 @@ export class SettingsComponent implements OnInit {
   private initFormChangeSub(): void {
     this.settingsForm.valueChanges.subscribe(
       data => {
-        this._audioService.setEffects(data);
-
+        const effectsSettings = new EffectsSettings(
+          data.reverbMix * .01,
+          data.speed * .01,
+          data.volume * .01
+        );
+        this._audioService.setEffects(effectsSettings);
         this.onSettingsCallback$.emit(data);
       }
     );
@@ -34,9 +41,9 @@ export class SettingsComponent implements OnInit {
 
   private initSettingsForm(): void {
     this.settingsForm = new FormGroup({
-      speed: new FormControl(70),
-      volume: new FormControl(80),
       reverbMix: new FormControl(60),
+      speed: new FormControl(70),
+      volume: new FormControl(80)
     });
   }
 

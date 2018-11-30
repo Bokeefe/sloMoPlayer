@@ -20,6 +20,7 @@ import {SettingsComponent} from './components/settings/settings.component';
 import {AudioService} from './shared/services/audio.service';
 import {PlaylistService} from './shared/services/playlist.service';
 import {HttpClientService } from './shared/services/http-client.service';
+import {UserAlertService} from './shared/services/user-alert.service';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,9 @@ import {HttpClientService } from './shared/services/http-client.service';
     ControlComponent,
     HttpClient,
     PlaylistService,
-    HttpClientService],
+    HttpClientService,
+    UserAlertService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

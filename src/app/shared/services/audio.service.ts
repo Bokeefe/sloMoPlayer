@@ -11,7 +11,6 @@ import {PlaylistService} from './playlist.service';
 // models
 import {EffectsSettings} from '../models/effects-settings';
 import {Song} from '../models/song';
-import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,7 @@ import {Observable} from 'rxjs';
 export class AudioService {
   @Output() isPlaying$: EventEmitter<boolean>;
   @Output() isLoading$: EventEmitter<boolean>;
-
+  @Output() currentSong$: EventEmitter<Song>;
 
   public effectsSettings: EffectsSettings;
 
@@ -38,7 +37,7 @@ export class AudioService {
     this.playlistArray = [];
     this.playlistPosition = 0;
     this.initEventEmitters();
-    this.effectsSettings = new EffectsSettings(.7, .7, .8);
+    this.setEffects(new EffectsSettings(.6, .7, .8));
     this.rootDir = '/music/';
   }
 
@@ -86,39 +85,41 @@ export class AudioService {
 
     this.setPlaylist(this._playlistService.getPlaylist());
 
-    console.log(this.playlistArray[this.playlistPosition]);
-
     if (this.pizzi) {
       this.pizzi.play(this.playlistArray[this.playlistPosition]);
+      this.currentSong$.emit(this.playlist[this.playlistPosition]);
       this.isLoading$.emit(false);
       this.isPlaying$.emit(true);
     } else {
-        this.initPizzi(new EffectsSettings(.7, .7, .8), () => {
+        this.initPizzi(this.effectsSettings, () => {
           setTimeout(() => {
             this.pizzi.sourceNode.onended = () => {
               this.nextTrack();
             };
-          }, 20000);
+          }, 5000);
       });
     }
   }
 
   public setEffects(effectsSettings: EffectsSettings): void {
     this.effectsSettings = effectsSettings;
-    this.setEffectsOnPizzi();
+    this.setEffectSettingsLocalStorage();
+    if (this.pizzi) {
+      this.setEffectsOnPizzi();
+    }
   }
 
   public setEffectsOnPizzi(): void {
     if (this.pizzi.volume) {
-      this.pizzi.volume = this.effectsSettings.volume * .01;
+      this.pizzi.volume = this.effectsSettings.volume;
     }
 
     if (this.pizzi.effects) {
-      this.pizzi.effects[0].mix = this.effectsSettings.reverbMix * .01;
+      this.pizzi.effects[0].mix = this.effectsSettings.reverbMix;
     }
 
     if (this.pizzi && this.pizzi.hasOwnProperty('sourceNode')) {
-      this.pizzi.sourceNode.playbackRate.value = this.effectsSettings.speed * .01;
+      this.pizzi.sourceNode.playbackRate.value = this.effectsSettings.speed;
     }
   }
 
@@ -162,12 +163,11 @@ export class AudioService {
       pizzi.play();
 
       pizzi.sourceNode.playbackRate.value = effectsSettings.speed;
-
-      console.log(pizzi.sourceNode.playbackRate.value);
     });
     this.pizzi = pizzi;
+    this.currentSong$.emit(this.playlist[this.playlistPosition]);
     this.isPlaying$.emit(true);
-
+    this.isLoading$.emit(false);
 
     callback();
   }
@@ -175,6 +175,8 @@ export class AudioService {
   private initEventEmitters(): void {
     this.isPlaying$ = new EventEmitter<boolean>();
     this.isLoading$ = new EventEmitter<boolean>();
+    this.currentSong$ = new EventEmitter<Song>();
+
   }
 
   private parsePlaylistPaths(): void {
@@ -184,6 +186,10 @@ export class AudioService {
         this.playlistArray.push(this.rootDir + song.path);
       }
     }
+  }
+
+  private setEffectSettingsLocalStorage (): void {
+    localStorage.setItem('effectsSettings', JSON.stringify(this.effectsSettings));
   }
 
   private setPlaylist(playlist: Array<Song>): void {

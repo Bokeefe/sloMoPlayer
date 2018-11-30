@@ -1,3 +1,4 @@
+import { UserAlertService } from './../../shared/services/user-alert.service';
 // angular
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog, MatSnackBar, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
@@ -9,6 +10,8 @@ import {PlaylistService} from '../../shared/services/playlist.service';
 // models
 import {EffectsSettings} from '../../shared/models/effects-settings';
 import {Subscription} from 'rxjs';
+import {Song} from '../../shared/models/song';
+import {current} from 'codelyzer/util/syntaxKind';
 
 @Component({
   selector: 'app-control',
@@ -17,6 +20,8 @@ import {Subscription} from 'rxjs';
 })
 export class ControlComponent implements OnDestroy, OnInit {
   @Input() playlist: any;
+
+  public currentSong: Song;
 
   public isPlaying: boolean;
 
@@ -30,17 +35,31 @@ export class ControlComponent implements OnDestroy, OnInit {
 
   private isPlayingSub: Subscription;
 
+  private currentSongSub: Subscription;
+
+
   public timePosition: Object;
 
-  constructor(public _snackBar: MatSnackBar, private _audioService: AudioService,
-              private _playlistService: PlaylistService) {
-    this.effectsSettings = new EffectsSettings(.6, .8, .8);
+  constructor(private _audioService: AudioService,
+              private _playlistService: PlaylistService,
+              private _userAlertService: UserAlertService) {
+    this.effectsSettings = new EffectsSettings(.6, .7, .8);
     this.isLoadingSub = this._audioService.isLoading$.subscribe(
       data => this.setIsLoading(data)
     );
     this.isPlayingSub = this._audioService.isPlaying$.subscribe(
       data => this.setIsPlaying(data)
     );
+    this.currentSongSub = this._audioService.currentSong$.subscribe(
+      data => this.setCurrentSong(data)
+    );
+
+    this.currentSong = new Song();
+  }
+
+
+  public onOpenSnackBar(message: string): void {
+    this._userAlertService.message(message);
   }
 
   public nextTrackPlay(): void {
@@ -59,6 +78,11 @@ export class ControlComponent implements OnDestroy, OnInit {
       this._audioService.play();
       this.setIsPlaying(true);
     }
+  }
+
+  private setCurrentSong (currentSong: Song): void {
+    this.currentSong = currentSong;
+    console.log(this.currentSong.path);
   }
 
   private setEffectsSettings(effectsSettings: EffectsSettings): void {
@@ -80,6 +104,8 @@ export class ControlComponent implements OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.isPlayingSub.unsubscribe();
     this.isLoadingSub.unsubscribe();
+    this.isLoadingSub.unsubscribe();
+    this.currentSongSub.unsubscribe();
   }
 
   ngOnInit() {

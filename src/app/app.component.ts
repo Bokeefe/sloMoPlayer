@@ -1,12 +1,11 @@
+import { UserAlertService } from './shared/services/user-alert.service';
+import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
 // angular
-import {Component} from '@angular/core';
-
-// libraries
+import { Component } from '@angular/core';
 
 // services
 import { PlaylistService } from './shared/services/playlist.service';
-
 
 // models
 import { Song } from './shared/models/song';
@@ -18,12 +17,18 @@ import { Song } from './shared/models/song';
 })
 
 export class AppComponent {
-  constructor(public _snackBar: MatSnackBar) {}
+  public userAlertSub: Subscription;
 
-  public openSnackBar(message) {
-    this._snackBar.open(message, 'OKAY', {
-      duration: 5000,
-    });
+  constructor(public _snackBar: MatSnackBar,
+              private _userAlertService: UserAlertService) {
+    this.userAlertSub = this._userAlertService.message$.subscribe(
+      data => this.openSnackBar(data)
+    );
   }
 
+  public openSnackBar(message: string) {
+    this._snackBar.open(message, 'OKAY',  {
+
+    });
+  }
 }

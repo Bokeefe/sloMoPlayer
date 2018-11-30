@@ -19,3 +19,8 @@ input{
 nav {
   background-color: rgba(0, 0, 0, .7);
 }
+.now-playing {
+  display: flex;
+  justify-content: space-evenly;
+  color: white;
+}

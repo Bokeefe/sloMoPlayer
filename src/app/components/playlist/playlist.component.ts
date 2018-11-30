@@ -2,6 +2,9 @@
 import {Component, EventEmitter, Output, OnInit, Input} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
+// vendors
+import { Subscription } from 'rxjs';
+
 // services
 import {PlaylistService} from '../../shared/services/playlist.service';
 
@@ -16,14 +19,11 @@ import {AudioService} from '../../shared/services/audio.service';
 })
 export class PlaylistComponent implements OnInit {
   @Input() playlist: Array<Song>;
-
+  @Input() playlistPosition: number;
   @Output() songSelected = new EventEmitter<string>();
 
-  public playlistPosition: number;
-
   constructor(private _audioService: AudioService,
-              private _playlistService: PlaylistService) {
-  }
+              private _playlistService: PlaylistService) { }
 
   public deleteSong(event: number): void {
     this.playlist.splice(event, 1);
