@@ -60,9 +60,7 @@ export class PlayerPageComponent implements OnInit {
   }
 
   private setDefaultPlaylist(genre: string): void {
-    if (this.genres.indexOf(genre) > -1) {
       this.getPlaylist(genre);
-    }
   }
 
   private setGenres(): void {
