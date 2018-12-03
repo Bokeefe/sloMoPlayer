@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark navbar-control">
   <div class="control-row">
-    <a class="navbar-brand" href="#" *ngIf="!playerLoading">🐌</a>
-    <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw color-white" *ngIf="playerLoading"></i>
+    <a class="navbar-brand" href="#" *ngIf="!isLoading">🐌</a>
+    <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw color-white" *ngIf="isLoading"></i>
     <a ngClass="{{isPlaying ? 'fa fa-pause' : 'fa fa-play'}}" (click)="togglePlay()" id="play-btn"
        style="margin-top:10px;"></a>
     <a (click)="nextTrackPlay()" class="fa fa-forward" style="margin-top:15px;"></a>
