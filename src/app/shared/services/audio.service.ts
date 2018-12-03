@@ -96,7 +96,7 @@ export class AudioService {
             this.pizzi.sourceNode.onended = () => {
               this.nextTrack();
             };
-          }, 5000);
+          }, 15000);
       });
     }
   }

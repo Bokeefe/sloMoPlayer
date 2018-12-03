@@ -32,7 +32,7 @@ var readMetadata = function (basedir, func) {
     var p = path.join(root, stats.name);
     var fileName = p.replace('music/', '');
     trackDict(p, fileName,  function (d) {
-      // console.log(d);
+        // console.log(d);
       md.push(d);
     });
 
