@@ -12,6 +12,7 @@ import {EffectsSettings} from '../../shared/models/effects-settings';
 import {Subscription} from 'rxjs';
 import {Song} from '../../shared/models/song';
 import {current} from 'codelyzer/util/syntaxKind';
+import {SettingsService} from '../../shared/services/settings.service';
 
 @Component({
   selector: 'app-control',
@@ -37,37 +38,17 @@ export class ControlComponent implements OnDestroy, OnInit {
 
   private currentSongSub: Subscription;
 
-
-  public timePosition: Object;
-
   constructor(private _audioService: AudioService,
               private _playlistService: PlaylistService,
+              private _settingsService: SettingsService,
               private _userAlertService: UserAlertService) {
+    this.initSubs();
     this.effectsSettings = new EffectsSettings(.6, .7, .8);
-    this.isLoadingSub = this._audioService.isLoading$.subscribe(
-      data => this.setIsLoading(data)
-    );
-    this.isPlayingSub = this._audioService.isPlaying$.subscribe(
-      data => this.setIsPlaying(data)
-    );
-    this.currentSongSub = this._audioService.currentSong$.subscribe(
-      data => this.setCurrentSong(data)
-    );
-
     this.currentSong = new Song();
-  }
-
-
-  public onOpenSnackBar(message: string): void {
-    this._userAlertService.message(message);
   }
 
   public nextTrackPlay(): void {
     this._audioService.nextTrack();
-  }
-
-  public onSettingsCallback(effectsParams: any): void {
-    this.setEffectsSettings(effectsParams);
   }
 
   public togglePlay(): void {
@@ -80,13 +61,21 @@ export class ControlComponent implements OnDestroy, OnInit {
     }
   }
 
-  private setCurrentSong (currentSong: Song): void {
-    this.currentSong = currentSong;
-    console.log(this.currentSong.path);
+  private initSubs(): void {
+    this.isLoadingSub = this._audioService.isLoading$.subscribe(
+      data => this.setIsLoading(data)
+    );
+    this.isPlayingSub = this._audioService.isPlaying$.subscribe(
+      data => this.setIsPlaying(data)
+    );
+    this.currentSongSub = this._audioService.currentSong$.subscribe(
+      data => this.setCurrentSong(data)
+    );
   }
 
-  private setEffectsSettings(effectsSettings: EffectsSettings): void {
-    this.effectsSettings = effectsSettings;
+  private setCurrentSong (currentSong: Song): void {
+    this.currentSong = currentSong;
+    console.log(this._playlistService.getPlaylistPosition(), this.currentSong.title, this._settingsService.effectsSettings.speed, this.currentSong);
   }
 
   private setIsLoading(isLoading): void {
@@ -95,10 +84,6 @@ export class ControlComponent implements OnDestroy, OnInit {
 
   private setIsPlaying(isPlaying): void {
     this.isPlaying = isPlaying;
-  }
-
-  private setTimePosition(timePosition: Object): void {
-    this.timePosition = timePosition;
   }
 
   ngOnDestroy(): void {

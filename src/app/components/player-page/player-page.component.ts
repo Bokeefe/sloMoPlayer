@@ -5,9 +5,6 @@ import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core'
 import {PlaylistService} from '../../shared/services/playlist.service';
 import { UserAlertService } from './../../shared/services/user-alert.service';
 
-// components
-import {ControlComponent} from '../control/control.component';
-
 // models
 import {Song} from '../../shared/models/song';
 import {Subscription} from 'rxjs';
@@ -47,7 +44,7 @@ export class PlayerPageComponent implements OnInit {
           this._playlistService.setCurrentPlaylist(data);
           this.setPlaylist(data);
         },
-        error => this._userAlertService.error(error)
+        error => this._userAlertService.error(error.message)
       );
   }
 
@@ -60,7 +57,9 @@ export class PlayerPageComponent implements OnInit {
   }
 
   private setDefaultPlaylist(genre: string): void {
+    if (this.genres.indexOf(genre) !== -1) {
       this.getPlaylist(genre);
+    }
   }
 
   private setGenres(): void {

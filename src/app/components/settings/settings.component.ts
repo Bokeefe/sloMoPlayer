@@ -1,12 +1,11 @@
 // angular
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from '@angular/forms';
-
-// services
-import { AudioService } from './../../shared/services/audio.service';
 
 // models
 import { EffectsSettings } from './../../shared/models/effects-settings';
+import {SettingsService} from '../../shared/services/settings.service';
+import {AudioService} from '../../shared/services/audio.service';
 
 @Component({
   selector: 'app-settings',
@@ -17,12 +16,10 @@ export class SettingsComponent implements OnInit {
 
 @Input() settingsForm: FormGroup;
 
-@Output() onSettingsCallback$: EventEmitter<any>;
-
-  constructor(private _audioService: AudioService) {
+  constructor(private _audioService: AudioService,
+              private _settingsService: SettingsService) {
     this.initSettingsForm();
     this.initFormChangeSub();
-    this.onSettingsCallback$ = new EventEmitter<any>();
   }
 
   private initFormChangeSub(): void {
@@ -33,8 +30,10 @@ export class SettingsComponent implements OnInit {
           data.speed * .01,
           data.volume * .01
         );
-        this._audioService.setEffects(effectsSettings);
-        this.onSettingsCallback$.emit(data);
+
+        this._settingsService.setEffectsSettings(effectsSettings);
+        this._audioService.setEffectsOnPizzi();
+
       }
     );
   }
@@ -49,5 +48,4 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }

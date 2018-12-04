@@ -2,9 +2,6 @@
 import {Component, EventEmitter, Output, OnInit, Input} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
-// vendors
-import { Subscription } from 'rxjs';
-
 // services
 import {PlaylistService} from '../../shared/services/playlist.service';
 
@@ -29,7 +26,7 @@ export class PlaylistComponent implements OnInit {
     this.playlist.splice(event, 1);
   }
 
-  public  drop(event: CdkDragDrop<string[]>) {
+  public drop(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.playlist, event.previousIndex, event.currentIndex);
     this._playlistService.setCurrentPlaylist(this.playlist);
     this.getPlaylist();
@@ -37,7 +34,7 @@ export class PlaylistComponent implements OnInit {
 
   private getPlaylist(): void {
     this.playlist = this._playlistService.getPlaylist();
-    this.playlistPosition = this._audioService.getPlaylistPosition();
+    this.playlistPosition = this._playlistService.getPlaylistPosition();
   }
 
   ngOnInit() {

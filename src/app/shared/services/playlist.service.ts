@@ -15,16 +15,20 @@ export class PlaylistService {
 
   public genres: any;
 
-  public playlist: any;
+  public playlist: Array<Song>;
+
+  public playlistPosition: number;
 
   constructor(private _httpClient: HttpClientService) {
     this.newGenre$ = new EventEmitter<any>();
+    this.playlistPosition = 0;
     this.setGenres();
   }
 
   public deletePlaylist(): void {
     this.setCurrentPlaylist([]);
   }
+
 
   public getGenres(): any {
     return this._httpClient.GET('/genres/');
@@ -47,6 +51,13 @@ export class PlaylistService {
     return this.playlist;
   }
 
+  public getPlaylistPosition(): number {
+    return this.playlistPosition;
+  }
+
+  public incrementPlaylistPosition(): void {
+    this.playlistPosition++;
+  }
 
   public emitNewGenre(genre: any): void {
     this.newGenre$.emit(genre);

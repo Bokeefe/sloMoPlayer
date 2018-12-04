@@ -4,6 +4,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 // services
 import {PlaylistService} from '../../shared/services/playlist.service';
 import {AudioService} from '../../shared/services/audio.service';
+import {UserAlertService} from '../../shared/services/user-alert.service';
 
 @Component({
   selector: 'app-genre-bar',
@@ -20,7 +21,8 @@ export class GenreBarComponent implements OnInit {
   public genres: any;
 
   constructor(private _audioService: AudioService,
-              private _playlistService: PlaylistService) {
+              private _playlistService: PlaylistService,
+              private _userAlertService: UserAlertService) {
     this.onNewGenre$ =  new EventEmitter<any>();
     this.getGenres();
   }
@@ -29,7 +31,7 @@ export class GenreBarComponent implements OnInit {
     this._playlistService.getGenres()
       .subscribe(
         data => this.setGenresArray(data),
-        error => console.log(JSON.parse(error))
+        error => this._userAlertService.error(error.message)
       );
   }
 
