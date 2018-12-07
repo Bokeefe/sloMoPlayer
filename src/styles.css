@@ -64,3 +64,10 @@ a {
 .first-btn {
   margin-left: 0 !important;
 }
+.info-dialog{
+  background: rgba(0, 0, 0, .8);
+}
+.error-dialog {
+  border: 3px solid red;
+  background: rgba(255, 0, 0, .9);
+}

@@ -11,7 +11,6 @@ import {PlaylistService} from '../../shared/services/playlist.service';
 import {EffectsSettings} from '../../shared/models/effects-settings';
 import {Subscription} from 'rxjs';
 import {Song} from '../../shared/models/song';
-import {current} from 'codelyzer/util/syntaxKind';
 import {SettingsService} from '../../shared/services/settings.service';
 
 @Component({
@@ -45,6 +44,10 @@ export class ControlComponent implements OnDestroy, OnInit {
     this.initSubs();
     this.effectsSettings = new EffectsSettings(.6, .7, .8);
     this.currentSong = new Song();
+  }
+
+  public onSnail(): void {
+    this._userAlertService.message();
   }
 
   public nextTrackPlay(): void {

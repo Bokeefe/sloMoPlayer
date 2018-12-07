@@ -4,7 +4,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { NgModule } from '@angular/core';
-import {MatChipsModule, MatSnackBarModule, MatProgressBarModule, MatSliderModule} from '@angular/material';
+import {MatChipsModule, MatSnackBarModule, MatProgressBarModule, MatSliderModule, MAT_SNACK_BAR_DATA} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 // components
@@ -21,6 +21,7 @@ import {AudioService} from './shared/services/audio.service';
 import {PlaylistService} from './shared/services/playlist.service';
 import {HttpClientService } from './shared/services/http-client.service';
 import {UserAlertService} from './shared/services/user-alert.service';
+import { InfoComponent } from './components/info/info.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,11 @@ import {UserAlertService} from './shared/services/user-alert.service';
     PlaylistComponent,
     GenreBarComponent,
     PlayerPageComponent,
-    SettingsComponent
+    SettingsComponent,
+    InfoComponent
+  ],
+  entryComponents: [
+    InfoComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -45,6 +50,7 @@ import {UserAlertService} from './shared/services/user-alert.service';
   ],
   providers: [
     {provide: APP_BASE_HREF, useValue: '/'},
+    { provide: MAT_SNACK_BAR_DATA, useValue: {} },
     AudioService,
     ControlComponent,
     HttpClient,

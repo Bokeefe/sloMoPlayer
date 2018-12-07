@@ -31,7 +31,7 @@ export class GenreBarComponent implements OnInit {
     this._playlistService.getGenres()
       .subscribe(
         data => this.setGenresArray(data),
-        error => this._userAlertService.error(error.message)
+        error => this._userAlertService.error(error)
       );
   }
 

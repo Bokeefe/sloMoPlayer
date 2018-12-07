@@ -3,7 +3,8 @@ import {EventEmitter, Injectable, Output} from '@angular/core';
 
 // libraries
 import * as Pizzicato from '../../../../node_modules/pizzicato/distr/Pizzicato.js';
-
+import {Observable, Subscription} from 'rxjs';
+import {of} from 'rxjs';
 // services
 import {HttpClientService} from './http-client.service';
 import {PlaylistService} from './playlist.service';
@@ -12,7 +13,6 @@ import {PlaylistService} from './playlist.service';
 import {EffectsSettings} from '../models/effects-settings';
 import {Song} from '../models/song';
 import {SettingsService} from './settings.service';
-import {Subscription} from 'rxjs';
 import {UserAlertService} from './user-alert.service';
 
 @Injectable({
@@ -45,7 +45,32 @@ export class AudioService {
     this.initEventEmitters();
     this._settingsService.setEffectsSettings(new EffectsSettings(.6, .7, .8));
     this.rootDir = '/music/';
+  }
 
+  public getNewPizzi(): Observable<Pizzicato> {
+
+    this.setEffects();
+    this.setPlaylist(this._playlistService.getPlaylist());
+    console.log(this.playlistPosition, this.effectsSettings, this.playlist);
+    const effectsSettings = this.effectsSettings;
+
+    const pizzi = new Pizzicato.Sound({
+      source: 'file',
+      options: {
+        path: this.rootDir + this.playlist[this.playlistPosition].path,
+        volume: this.effectsSettings.volume
+      }
+    }, function () {
+      const reverb = new Pizzicato.Effects.Reverb({
+        time: 5,
+        decay: 0.8,
+        reverse: false,
+        mix: effectsSettings.reverbMix
+      });
+      pizzi.addEffect(reverb);
+      pizzi.sourceNode.playbackRate.value = effectsSettings.speed;
+    });
+    return of(pizzi);
   }
 
   public nextTrack(): void {
@@ -95,7 +120,7 @@ export class AudioService {
             this.pizzi.sourceNode.onended = () => {
               this.nextTrack();
             };
-          }, 15000);
+          }, 30000);
       });
     }
   }

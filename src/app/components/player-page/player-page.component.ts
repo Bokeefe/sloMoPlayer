@@ -44,7 +44,7 @@ export class PlayerPageComponent implements OnInit {
           this._playlistService.setCurrentPlaylist(data);
           this.setPlaylist(data);
         },
-        error => this._userAlertService.error(error.message)
+        error => this._userAlertService.error(error)
       );
   }
 
@@ -72,6 +72,6 @@ export class PlayerPageComponent implements OnInit {
   ngOnInit() {
     setTimeout(() => {
       this.setDefaultPlaylist('Christmas');
-    });
+    }, 3000);
   }
 }

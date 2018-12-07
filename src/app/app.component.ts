@@ -3,12 +3,8 @@ import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material';
 // angular
 import { Component } from '@angular/core';
+import {InfoComponent} from './components/info/info.component';
 
-// services
-import { PlaylistService } from './shared/services/playlist.service';
-
-// models
-import { Song } from './shared/models/song';
 
 @Component({
   selector: 'app-root',
@@ -17,18 +13,31 @@ import { Song } from './shared/models/song';
 })
 
 export class AppComponent {
-  public userAlertSub: Subscription;
+  public userErrorSub: Subscription;
+  public userMessageSub: Subscription;
+  public infoSub: Subscription;
 
   constructor(public _snackBar: MatSnackBar,
               private _userAlertService: UserAlertService) {
-    this.userAlertSub = this._userAlertService.message$.subscribe(
-      data => this.openSnackBar(data)
+    this.userMessageSub = this._userAlertService.message$.subscribe(
+      data => this.openMessageSnackBar(data)
+    );
+    this.userErrorSub = this._userAlertService.error$.subscribe(
+      data => this.openErrorSnackBar(data)
     );
   }
 
-  public openSnackBar(message: string) {
-    this._snackBar.open(message, 'OKAY',  {
+  public openErrorSnackBar(message: string) {
+    this._snackBar.open(message, null, {
+      duration: 2000,
+      panelClass: 'error-dialog'
+    });
+  }
 
+  public openMessageSnackBar(message: string) {
+    this._snackBar.openFromComponent(InfoComponent, {
+      data: message,
+      panelClass: 'info-dialog'
     });
   }
 }
