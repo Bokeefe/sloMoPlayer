@@ -27,6 +27,7 @@
     "audit": "0.0.6",
     "core-js": "^2.4.1",
     "cors": "^2.8.4",
+    "jasmine": "^3.3.1",
     "musicmetadata": "^2.0.5",
     "pizzicato": "^0.6.4",
     "rxjs": "^6.3.3",

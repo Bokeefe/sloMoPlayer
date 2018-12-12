@@ -13,9 +13,7 @@ import {UserAlertService} from '../../shared/services/user-alert.service';
 })
 export class GenreBarComponent implements OnInit {
   @Output() onNewGenre$: EventEmitter<any>;
-
-  public activeClass: any;
-
+  
   public activeGenre: any;
 
   public genres: any;

@@ -6,6 +6,7 @@ import {HttpClientService} from './http-client.service';
 
 // models
 import {Song} from '../models/song';
+import {Observable, of} from 'rxjs';
 
 @Injectable()
 export class PlaylistService {
@@ -29,7 +30,9 @@ export class PlaylistService {
     this.setCurrentPlaylist([]);
   }
 
-
+  public getGenre(): string {
+    return this.genre;
+  }
   public getGenres(): any {
     return this._httpClient.GET('/genres/');
   }

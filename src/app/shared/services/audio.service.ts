@@ -1,5 +1,5 @@
 // angular
-import {EventEmitter, Injectable, Output} from '@angular/core';
+import {EventEmitter, Injectable, OnChanges, Output, SimpleChanges} from '@angular/core';
 
 // libraries
 import * as Pizzicato from '../../../../node_modules/pizzicato/distr/Pizzicato.js';
@@ -45,32 +45,6 @@ export class AudioService {
     this.initEventEmitters();
     this._settingsService.setEffectsSettings(new EffectsSettings(.6, .7, .8));
     this.rootDir = '/music/';
-  }
-
-  public getNewPizzi(): Observable<Pizzicato> {
-
-    this.setEffects();
-    this.setPlaylist(this._playlistService.getPlaylist());
-    console.log(this.playlistPosition, this.effectsSettings, this.playlist);
-    const effectsSettings = this.effectsSettings;
-
-    const pizzi = new Pizzicato.Sound({
-      source: 'file',
-      options: {
-        path: this.rootDir + this.playlist[this.playlistPosition].path,
-        volume: this.effectsSettings.volume
-      }
-    }, function () {
-      const reverb = new Pizzicato.Effects.Reverb({
-        time: 5,
-        decay: 0.8,
-        reverse: false,
-        mix: effectsSettings.reverbMix
-      });
-      pizzi.addEffect(reverb);
-      pizzi.sourceNode.playbackRate.value = effectsSettings.speed;
-    });
-    return of(pizzi);
   }
 
   public nextTrack(): void {
@@ -166,7 +140,7 @@ export class AudioService {
     }
   }
 
-  private initPizzi(callback?: Function): void {
+  public initPizzi(callback?: Function): void {
     const effectsSettings = this._settingsService.getEffectsSettings();
 
     const playlistPosition = this._playlistService.getPlaylistPosition();
@@ -195,7 +169,6 @@ export class AudioService {
     });
     this.pizzi = pizzi;
     this.currentSong$.emit(this.playlist[playlistPosition]);
-    this.isPlaying$.emit(true);
     this.isLoading$.emit(false);
 
     callback();
@@ -205,7 +178,6 @@ export class AudioService {
     this.isPlaying$ = new EventEmitter<boolean>();
     this.isLoading$ = new EventEmitter<boolean>();
     this.currentSong$ = new EventEmitter<Song>();
-
   }
 
   private parsePlaylistPaths(): void {

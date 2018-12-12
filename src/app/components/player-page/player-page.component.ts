@@ -65,13 +65,13 @@ export class PlayerPageComponent implements OnInit {
   private setGenres(): void {
     this._playlistService.getGenres()
       .subscribe(
-        data => this.genres = data
+        data => {
+          this.genres = data;
+          this.setDefaultPlaylist('Christmas');
+        }
       );
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      this.setDefaultPlaylist('Christmas');
-    }, 3000);
   }
 }
