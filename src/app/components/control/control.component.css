@@ -18,9 +18,14 @@ input{
 }
 nav {
   background-color: rgba(0, 0, 0, .7);
+  margin: 0 auto;
 }
 .now-playing {
   display: flex;
   justify-content: space-evenly;
   color: white;
+}
+.control-row {
+  width: 100%;
+  margin: 0 auto;
 }

@@ -1,31 +1,37 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark navbar-control">
-  <div class="control-row">
-    <a (click)="onSnail()" class="navbar-brand">🐌</a>
-    <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw color-white" *ngIf="isLoading"></i>
-    <a ngClass="{{isPlaying ? 'fa fa-pause' : 'fa fa-play'}}" (click)="togglePlay()" id="play-btn"
-       style="margin-top:10px;"></a>
-    <a (click)="nextTrackPlay()" class="fa fa-forward" style="margin-top:15px;"></a>
-    <li class="nav-item dropdown position-static">
-      <a class="nav-link dropdown-toggle"
-         href="#"
-         id="navbarDropdown"
-         role="button"
-         data-toggle="dropdown"
-         aria-haspopup="true"
-         aria-expanded="false">
-        <i class="fa fa-cogs"></i>
-      </a>
-      <div class="dropdown-menu  w-100" aria-labelledby="navbarDropdown">
-        <app-settings></app-settings>
-      </div>
-    </li>
+  <div class="col-sm-12 col-md-6">
+    <div class="control-row">
+      <a (click)="onSnail()" class="navbar-brand">🐌</a>
+      <i class="fa fa-circle-o-notch fa-spin fa-3x fa-fw color-white" *ngIf="isLoading"></i>
+      <a ngClass="{{isPlaying ? 'fa fa-pause' : 'fa fa-play'}}" (click)="togglePlay()" id="play-btn"
+         style="margin-top:10px;"></a>
+      <a (click)="nextTrackPlay()" class="fa fa-forward" style="margin-top:15px;"></a>
+      <li class="nav-item dropdown position-static">
+        <a class="nav-link dropdown-toggle"
+           href="#"
+           id="navbarDropdown"
+           role="button"
+           data-toggle="dropdown"
+           aria-haspopup="true"
+           aria-expanded="false">
+          <i class="fa fa-cogs"></i>
+        </a>
+        <div class="dropdown-menu  w-100" aria-labelledby="navbarDropdown">
+          <app-settings></app-settings>
+        </div>
+      </li>
+    </div>
   </div>
-  <div class="now-playing">
-    <span>{{currentSong.title}}</span> <span *ngIf="currentSong.artist?.length">by</span> <span>{{currentSong.artist}}</span>
+  <div class="col-sm-12 col-md-6">
+    <div class="now-playing">
+      <span>{{currentSong.title}}</span> <span *ngIf="currentSong.artist?.length">by</span> <span>{{currentSong.artist}}</span>
+    </div>
+    <div class="control-row">
+      <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
+    </div>
   </div>
-  <div class="control-row">
-    <mat-progress-bar *ngIf="isLoading" mode="indeterminate"></mat-progress-bar>
-  </div>
+
+
 </nav>
 
 
