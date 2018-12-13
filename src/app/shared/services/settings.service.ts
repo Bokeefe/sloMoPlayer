@@ -1,15 +1,17 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
 import {EffectsSettings} from '../models/effects-settings';
-import {AudioService} from './audio.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettingsService {
 
+  @Output() onSettingsChange$: EventEmitter<EffectsSettings>;
+
   public effectsSettings: EffectsSettings;
 
   constructor() {
+    this.onSettingsChange$ = new EventEmitter<EffectsSettings>();
     this.setEffectsSettings(new EffectsSettings(.6, .7, .8));
   }
 
@@ -19,5 +21,6 @@ export class SettingsService {
 
   public setEffectsSettings(effectsSettings: EffectsSettings): void {
     this.effectsSettings = effectsSettings;
+    this.onSettingsChange$.emit(this.effectsSettings);
   }
 }

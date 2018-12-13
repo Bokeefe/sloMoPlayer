@@ -19,7 +19,7 @@ li > span {
   text-transform: uppercase;
 }
 .playlist-items {
-  margin: 100px 0;
+  margin: 120px 0;
   float: right;
   border: none;
   background: rgba(0, 0, 0, .2);

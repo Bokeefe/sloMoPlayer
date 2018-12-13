@@ -32,7 +32,6 @@ export class SettingsComponent implements OnInit {
         );
 
         this._settingsService.setEffectsSettings(effectsSettings);
-        this._audioService.setEffectsOnPizzi();
 
       }
     );

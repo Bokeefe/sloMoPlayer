@@ -12,7 +12,7 @@ import {PlaylistService} from '../../shared/services/playlist.service';
 
 // models
 import {EffectsSettings} from '../../shared/models/effects-settings';
-import {forkJoin, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {Song} from '../../shared/models/song';
 import {SettingsService} from '../../shared/services/settings.service';
 
@@ -56,8 +56,11 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
     this.effectsSettings = new EffectsSettings(.6, .7, .8);
     this.currentSong = new Song();
     this.rootDir = '/music/';
-    this.setEffectsSettings();
+    this.setEffectsSettings(new EffectsSettings(.6, .7, .8));
     this.setPlaylistPosition();
+    this._settingsService.onSettingsChange$.subscribe(
+      data => this.setEffectsSettings(data)
+    );
   }
 
   public onSnail(): void {
@@ -67,15 +70,15 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
   public nextTrackPlay(): void {
     if (this.audio.playing) {
       this.audio.stop();
+      this.setIsPlaying(false);
     }
 
     this._playlistService.incrementPlaylistPosition();
 
     this.setPlaylistPosition();
     if (this.playlistPosition < this.playlist.length) {
-      this.initPizzi();
+      this.initAudio();
     } else {
-
       this._userAlertService.message('playlist finished');
     }
 
@@ -85,13 +88,11 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
     if (this.audio && this.audio.playing) {
       this.audio.pause();
       this.setIsPlaying(false);
-    } else {
-      if (this.audio && this.audio.paused) {
+    } else if (this.audio && this.audio.paused) {
         this.audio.play();
-      } else {
-        this.initPizzi();
-      }
-      this.setIsPlaying(true);
+        this.setIsPlaying(true);
+    } else if (!this.audio) {
+      this._userAlertService.message('please pick a playlist');
     }
   }
 
@@ -103,59 +104,53 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
     this.isPlayingSub = this._audioService.isPlaying$.subscribe(
       data => this.setIsPlaying(data)
     );
-
-    this.currentSongSub = this._audioService.currentSong$.subscribe(
-      data => this.setCurrentSong(data)
-    );
   }
 
-  private initPizzi(): void {
+  private initAudio(): void {
 
-    this.audio = new Audio(this.rootDir + this.playlist[this.playlistPosition].path);
-    console.log(this.playlist[this.playlistPosition]);
-    this.currentSong = this.playlist[this.playlistPosition];
-    console.dir(this.audio, this.effectsSettings);
-    this.audio.playbackRate = 3;
-    this.audio.volume = this.effectsSettings.volume;
-    // const reverb = new Pizzicato.Effects.Reverb({
-    //   time: 5,
-    //   decay: 0.8,
-    //   reverse: false,
-    //   mix: this.effectsSettings.reverbMix
-    // });
-
-    this.audio.oncanplay = () => {
-      this.audio.play();
-      this.setIsPlaying(true);
-    };
-
-    this.audio.onended = () => {
+    if (this.audio && this.audio.playing) {
+      this.audio.stop();
       this.setIsPlaying(false);
-      this.nextTrackPlay();
-    };
+      delete this.audio;
+    } else if (this.audio && !this.audio.playing) {
+      this.setIsPlaying(false);
+      delete this.audio;
+    }
 
+    this.setCurrentSong();
+    this.setIsPlaying(true);
+    this.setIsLoading(false);
+
+    this.audio = new Pizzicato.Sound(this.rootDir + this.playlist[this.playlistPosition].path, () => {
+      const reverb = new Pizzicato.Effects.Reverb({
+        time: 5,
+        decay: 0.8,
+        reverse: false,
+        mix: this.effectsSettings.reverbMix
+      });
+
+      this.audio.addEffect(reverb);
+
+      this.audio.play();
+      this.audio.sourceNode.playbackRate.value = this.effectsSettings.speed;
+      this.audio.volume = this.effectsSettings.volume;
+      this.audio.sourceNode.onended = () => {
+        this.setIsLoading(true);
+        this.setIsPlaying(false);
+        this.nextTrackPlay();
+      };
+    });
   }
 
-  private play(): void {
-    this.audio.play();
+  private setCurrentSong (): void {
+    this.currentSong = new Song();
+    this.currentSong = this.playlist[this.playlistPosition];
+    console.log(this.playlistPosition, this.playlist[this.playlistPosition].path);
   }
 
-  private pause (): void {
-    this.audio.pause();
-  }
-
-  private setCurrentSong (currentSong: Song): void {
-    this.currentSong = currentSong;
-
-    console.log(this._playlistService.getPlaylistPosition(),
-      this.currentSong.title,
-      this._settingsService.effectsSettings.speed,
-      this.currentSong);
-  }
-
-  private setEffectsSettings(): void {
-    this.effectsSettings = this._settingsService.getEffectsSettings();
-  }
+  // private setEffectsSettings(): void {
+  //   this.effectsSettings = this._settingsService.getEffectsSettings();
+  // }
 
   private setIsLoading(isLoading): void {
     this.isLoading = isLoading;
@@ -164,6 +159,16 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
   private setAudio(audio: any): void {
     this.audio = audio;
   }
+
+  private setEffectsSettings(effectsSettings: EffectsSettings): void {
+    this.effectsSettings = effectsSettings;
+    if (this.audio) {
+      this.audio.volume = this.effectsSettings.volume;
+      this.audio.sourceNode.playbackRate.value = 6;
+      this.audio.effects[0].mix = this.effectsSettings.reverbMix;
+    }
+  }
+
 
   private setIsPlaying(isPlaying): void {
     this.isPlaying = isPlaying;
@@ -190,7 +195,16 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     this.setPlaylistPosition();
     if (changes && !changes.playlist.firstChange && this.playlist.length) {
-      this.initPizzi();
+      this.playlistPosition = 0;
+      if (this.audio && this.audio.playing) {
+        this.audio.stop();
+        delete this.audio;
+        setTimeout(() => {
+          this.initAudio();
+        }, 1000);
+      } else {
+        this.initAudio();
+      }
     }
   }
 
