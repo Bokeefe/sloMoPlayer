@@ -11,6 +11,7 @@ import {Observable, of} from 'rxjs';
 @Injectable()
 export class PlaylistService {
   @Output() newGenre$: EventEmitter<any>;
+  @Output() newPlaylistPosition$: EventEmitter<any>;
 
   public genre: any;
 
@@ -22,6 +23,7 @@ export class PlaylistService {
 
   constructor(private _httpClient: HttpClientService) {
     this.newGenre$ = new EventEmitter<any>();
+    this.newPlaylistPosition$ = new EventEmitter<any>();
     this.playlistPosition = 0;
     this.setGenres();
   }
@@ -47,6 +49,7 @@ export class PlaylistService {
 
   public getNewPlaylist(genre: any): any {
     delete this.playlist;
+    this.playlistPosition = 0;
     return this._httpClient.GET('/getPlaylist/' + genre);
   }
 
@@ -60,6 +63,7 @@ export class PlaylistService {
 
   public incrementPlaylistPosition(): void {
     this.playlistPosition++;
+    this.newPlaylistPosition$.emit();
   }
 
   public emitNewGenre(genre: any): void {

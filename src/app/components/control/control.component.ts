@@ -65,15 +65,32 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
   }
 
   public nextTrackPlay(): void {
-    this._audioService.nextTrack();
+    if (this.audio.playing) {
+      this.audio.stop();
+    }
+
+    this._playlistService.incrementPlaylistPosition();
+
+    this.setPlaylistPosition();
+    if (this.playlistPosition < this.playlist.length) {
+      this.initPizzi();
+    } else {
+
+      this._userAlertService.message('playlist finished');
+    }
+
   }
 
   public togglePlay(): void {
-    if (this._audioService.hasOwnProperty('pizzi') && this._audioService.pizzi.playing) {
-      this._audioService.pause();
+    if (this.audio && this.audio.playing) {
+      this.audio.pause();
       this.setIsPlaying(false);
     } else {
-      // this._audioService.play();
+      if (this.audio && this.audio.paused) {
+        this.audio.play();
+      } else {
+        this.initPizzi();
+      }
       this.setIsPlaying(true);
     }
   }
@@ -93,21 +110,38 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
   }
 
   private initPizzi(): void {
+
     this.audio = new Audio(this.rootDir + this.playlist[this.playlistPosition].path);
+    console.log(this.playlist[this.playlistPosition]);
+    this.currentSong = this.playlist[this.playlistPosition];
     console.dir(this.audio, this.effectsSettings);
-    this.audio.playbackRate = this.effectsSettings.speed;
+    this.audio.playbackRate = 3;
     this.audio.volume = this.effectsSettings.volume;
-    const reverb = new Pizzicato.Effects.Reverb({
-      time: 5,
-      decay: 0.8,
-      reverse: false,
-      mix: this.effectsSettings.reverbMix
-    });
-    reverb.connect(this.audio);
+    // const reverb = new Pizzicato.Effects.Reverb({
+    //   time: 5,
+    //   decay: 0.8,
+    //   reverse: false,
+    //   mix: this.effectsSettings.reverbMix
+    // });
+
     this.audio.oncanplay = () => {
       this.audio.play();
+      this.setIsPlaying(true);
     };
 
+    this.audio.onended = () => {
+      this.setIsPlaying(false);
+      this.nextTrackPlay();
+    };
+
+  }
+
+  private play(): void {
+    this.audio.play();
+  }
+
+  private pause (): void {
+    this.audio.pause();
   }
 
   private setCurrentSong (currentSong: Song): void {
@@ -133,6 +167,10 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
 
   private setIsPlaying(isPlaying): void {
     this.isPlaying = isPlaying;
+  }
+
+  private setOnEnded(): void {
+    this.audio.oneded = this.nextTrackPlay();
   }
 
   private setPlaylistPosition(): void {

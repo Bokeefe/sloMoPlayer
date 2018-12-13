@@ -30,10 +30,10 @@ export class PlayerPageComponent implements OnInit {
               private _playlistService: PlaylistService,
               private _userAlertService: UserAlertService) {
     this.newPlaylist$ = new EventEmitter<any>();
-    this.setPlaylistPosition(0);
+    this.playlistPosition = 0;
     this.setGenres();
-    this.playlistPositionSub = this._audioService.currentSong$.subscribe(
-      data => this.setPlaylistPosition(data)
+    this.playlistPositionSub = this._playlistService.newPlaylistPosition$.subscribe(
+      data => this.setPlaylistPosition()
     );
   }
 
@@ -52,8 +52,8 @@ export class PlayerPageComponent implements OnInit {
     this.playlist = playlist;
   }
 
-  public setPlaylistPosition(playlistPosition: number): void {
-    this.playlistPosition = playlistPosition;
+  public setPlaylistPosition(): void {
+    this.playlistPosition = this._playlistService.getPlaylistPosition();
   }
 
   private setDefaultPlaylist(genre: string): void {
