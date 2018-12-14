@@ -1,5 +1,5 @@
 // angular
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 
 // services
 import {PlaylistService} from '../../shared/services/playlist.service';
@@ -67,7 +67,6 @@ export class PlayerPageComponent implements OnInit {
       .subscribe(
         data => {
           this.genres = data;
-          this.setDefaultPlaylist('Christmas');
         }
       );
   }

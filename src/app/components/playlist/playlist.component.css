@@ -5,15 +5,23 @@ li > span {
   padding:15px;
 }
 .pick {
-  display: flex;
+  text-align: center;
+  color: white;
   justify-content: center;
+  margin: 40% auto;
+  width: 80%;
+}
+.pick > p {
+  font-size: 18px;
+  color: white;
+}
+.pick > span {
   font-size: 100px;
-  margin-top:40%;
 }
 
-.active-song {
-  background: rgba(0, 0, 0, .5);
-}
+/*.active-song {*/
+  /*background: rgba(0, 0, 0, .5);*/
+/*}*/
 .artist {
   font-weight: 900;
   text-transform: uppercase;

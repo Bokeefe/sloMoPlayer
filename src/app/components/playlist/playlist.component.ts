@@ -25,9 +25,9 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   constructor(private _audioService: AudioService,
               private _playlistService: PlaylistService) {
-    this.playlistPositionSub = this._playlistService.newPlaylistPosition$.subscribe(
-      data => this.setPlaylistPosition()
-    );
+    // this.playlistPositionSub = this._playlistService.newPlaylistPosition$.subscribe(
+    //   data => this.setPlaylistPosition()
+    // );
     this.playlistPosition = 0;
   }
 

@@ -1,6 +1,7 @@
 <div *ngIf="playlist?.length" cdkDropList class="playlist-items" (cdkDropListDropped)="drop($event)">
-  <div  *ngFor="let song of playlist; let i = index" class="playlist-box {{i === playlistPosition ? 'active-song' : ''}}"  cdkDrag>
-    <span>{{[i+1]}}</span>
+  <div *ngFor="let song of playlist; let i = index" class="playlist-box {{i === playlistPosition ? 'active-song' : ''}}"
+       cdkDrag>
+    <span>{{[i + 1]}}</span>
     <span class="title">{{song.title}}</span>
     <span class="artist ">{{song.artist}}</span>
     <span>
@@ -9,7 +10,11 @@
   </div>
 </div>
 <div *ngIf="!playlist">
+
   <div class="pick">
+    <p>This is a slo mo music player and because of the gorgeous reverb poured on the tracks, it takes a while to load
+      the first song. The playlist is really is easy to edit, so cull the duds and settle in.</p><br/>
+    <p>Pick a playlist</p>
     <span>👇🏽</span>
   </div>
 </div>

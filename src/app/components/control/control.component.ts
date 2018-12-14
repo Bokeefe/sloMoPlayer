@@ -69,7 +69,9 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
 
   public nextTrackPlay(): void {
     if (this.audio.playing) {
+      this.audio.onended = null;
       this.audio.stop();
+      delete this.audio;
       this.setIsPlaying(false);
     }
 
@@ -77,7 +79,9 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
 
     this.setPlaylistPosition();
     if (this.playlistPosition < this.playlist.length) {
-      this.initAudio();
+      setTimeout(() => {
+        this.initAudio();
+      }, 3000);
     } else {
       this._userAlertService.message('playlist finished');
     }
@@ -148,34 +152,21 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
     console.log(this.playlistPosition, this.playlist[this.playlistPosition].path);
   }
 
-  // private setEffectsSettings(): void {
-  //   this.effectsSettings = this._settingsService.getEffectsSettings();
-  // }
-
   private setIsLoading(isLoading): void {
     this.isLoading = isLoading;
-  }
-
-  private setAudio(audio: any): void {
-    this.audio = audio;
   }
 
   private setEffectsSettings(effectsSettings: EffectsSettings): void {
     this.effectsSettings = effectsSettings;
     if (this.audio) {
       this.audio.volume = this.effectsSettings.volume;
-      this.audio.sourceNode.playbackRate.value = 6;
+      this.audio.sourceNode.playbackRate.value = this.effectsSettings.speed;
       this.audio.effects[0].mix = this.effectsSettings.reverbMix;
     }
   }
 
-
   private setIsPlaying(isPlaying): void {
     this.isPlaying = isPlaying;
-  }
-
-  private setOnEnded(): void {
-    this.audio.oneded = this.nextTrackPlay();
   }
 
   private setPlaylistPosition(): void {

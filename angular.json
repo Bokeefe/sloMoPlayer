@@ -93,7 +93,7 @@
         }
       }
     },
-    "SloMo Player-e2e": {
+    "SloMoPlayer-e2e": {
       "root": "e2e",
       "sourceRoot": "e2e",
       "projectType": "application",
