@@ -1,7 +1,6 @@
 import { UserAlertService } from './../../shared/services/user-alert.service';
 // angular
 import {Component, DoCheck, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {MatDialog, MatSnackBar, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 
 // libraries
 import * as Pizzicato from '../../../../node_modules/pizzicato/distr/Pizzicato.js';
@@ -32,8 +31,6 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
 
   public audio: any;
 
-  public audioReadyState: number;
-
   public playlistPosition: number;
 
   public effectsSettings: EffectsSettings;
@@ -43,8 +40,6 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
   private isPlayingSub: Subscription;
 
   private currentSongSub: Subscription;
-
-  private onNewGenreSub: Subscription;
 
   private rootDir: string;
 
