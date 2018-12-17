@@ -47,7 +47,6 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
               private _playlistService: PlaylistService,
               private _settingsService: SettingsService,
               private _userAlertService: UserAlertService) {
-    this.initSubs();
     this.effectsSettings = new EffectsSettings(.6, .7, .8);
     this.currentSong = new Song();
     this.rootDir = '/music/';
@@ -63,24 +62,19 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
   }
 
   public nextTrackPlay(): void {
-    if (this.audio.playing) {
-      this.audio.onended = null;
-      this.audio.stop();
-      delete this.audio;
-      this.setIsPlaying(false);
+    console.log(this.audio.sourceNode.context.currentTime, 'paused', this.audio.paused);
+    if (!this.audio.paused) {
+      this._playlistService.incrementPlaylistPosition();
+
+      this.setPlaylistPosition();
+      if (this.playlistPosition < this.playlist.length) {
+        setTimeout(() => {
+          this.initAudio();
+        }, 3000);
+      } else {
+        this._userAlertService.message('playlist finished');
+      }
     }
-
-    this._playlistService.incrementPlaylistPosition();
-
-    this.setPlaylistPosition();
-    if (this.playlistPosition < this.playlist.length) {
-      setTimeout(() => {
-        this.initAudio();
-      }, 3000);
-    } else {
-      this._userAlertService.message('playlist finished');
-    }
-
   }
 
   public togglePlay(): void {
@@ -93,16 +87,6 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
     } else if (!this.audio) {
       this._userAlertService.message('please pick a playlist');
     }
-  }
-
-  private initSubs(): void {
-    this.isLoadingSub = this._audioService.isLoading$.subscribe(
-      data => this.setIsLoading(data)
-    );
-
-    this.isPlayingSub = this._audioService.isPlaying$.subscribe(
-      data => this.setIsPlaying(data)
-    );
   }
 
   private initAudio(): void {
@@ -129,12 +113,10 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
       });
 
       this.audio.addEffect(reverb);
-
       this.audio.play();
       this.audio.sourceNode.playbackRate.value = this.effectsSettings.speed;
       this.audio.volume = this.effectsSettings.volume;
       this.audio.sourceNode.onended = () => {
-        this.setIsLoading(true);
         this.setIsPlaying(false);
         this.nextTrackPlay();
       };
