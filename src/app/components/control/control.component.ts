@@ -62,7 +62,6 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
   }
 
   public nextTrackPlay(): void {
-    console.log(this.audio.sourceNode.context.currentTime, 'paused', this.audio.paused);
     if (!this.audio.paused) {
       this._playlistService.incrementPlaylistPosition();
 
@@ -70,7 +69,7 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
       if (this.playlistPosition < this.playlist.length) {
         setTimeout(() => {
           this.initAudio();
-        }, 3000);
+        });
       } else {
         this._userAlertService.message('playlist finished');
       }
@@ -78,15 +77,21 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
   }
 
   public togglePlay(): void {
+
     if (this.audio && this.audio.playing) {
       this.audio.pause();
       this.setIsPlaying(false);
     } else if (this.audio && this.audio.paused) {
-        this.audio.play();
-        this.setIsPlaying(true);
+      this.audio.sourceNode.playbackRate.value =  this.effectsSettings.speed;
+      this.audio.play();
+      this.audio.sourceNode.onended = () => {
+        this.nextTrackPlay();
+      };
+      this.setIsPlaying(true);
     } else if (!this.audio) {
       this._userAlertService.message('please pick a playlist');
     }
+
   }
 
   private initAudio(): void {
