@@ -23,7 +23,7 @@ import {SettingsService} from '../../shared/services/settings.service';
 export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
   @Input() playlist: any;
 
-  public currentSong: Song;
+  public currentSong: any;
 
   public isPlaying: boolean;
 
@@ -48,7 +48,7 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
               private _settingsService: SettingsService,
               private _userAlertService: UserAlertService) {
     this.effectsSettings = new EffectsSettings(.6, .7, .8);
-    this.currentSong = new Song();
+    this.currentSong = 'nothing';
     this.rootDir = '/music/';
     this.setEffectsSettings(new EffectsSettings(.6, .7, .8));
     this.setPlaylistPosition();
@@ -105,10 +105,10 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
       delete this.audio;
     }
 
-    this.setCurrentSong();
     this.setIsPlaying(true);
     this.setIsLoading(false);
 
+    this.setCurrentSong();
     this.audio = new Pizzicato.Sound(this.rootDir + this.playlist[this.playlistPosition].path, () => {
       const reverb = new Pizzicato.Effects.Reverb({
         time: 5,
@@ -129,8 +129,7 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
   }
 
   private setCurrentSong (): void {
-    this.currentSong = new Song();
-    this.currentSong = this.playlist[this.playlistPosition];
+    this.currentSong = this.playlist[this.playlistPosition].path;
     console.log(this.playlistPosition, this.playlist[this.playlistPosition].path);
   }
 
