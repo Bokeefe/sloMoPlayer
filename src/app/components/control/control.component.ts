@@ -1,26 +1,25 @@
 import { UserAlertService } from './../../shared/services/user-alert.service';
 // angular
-import {Component, DoCheck, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectorRef, Component, DoCheck, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 
 // libraries
 import * as Pizzicato from '../../../../node_modules/pizzicato/distr/Pizzicato.js';
 
 // services
-import {AudioService} from '../../shared/services/audio.service';
 import {PlaylistService} from '../../shared/services/playlist.service';
 
 // models
 import {EffectsSettings} from '../../shared/models/effects-settings';
 import {Subscription} from 'rxjs';
-import {Song} from '../../shared/models/song';
 import {SettingsService} from '../../shared/services/settings.service';
+import {Song} from '../../shared/models/song';
 
 @Component({
   selector: 'app-control',
   templateUrl: './control.component.html',
   styleUrls: ['./control.component.css']
 })
-export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
+export class ControlComponent implements OnChanges, OnDestroy, OnInit {
   @Input() playlist: any;
 
   public currentSong: any;
@@ -35,23 +34,17 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
 
   public effectsSettings: EffectsSettings;
 
-  private isLoadingSub: Subscription;
-
-  private isPlayingSub: Subscription;
-
-  private currentSongSub: Subscription;
-
   private rootDir: string;
 
-  constructor(private _audioService: AudioService,
+  constructor(private cd: ChangeDetectorRef,
               private _playlistService: PlaylistService,
               private _settingsService: SettingsService,
               private _userAlertService: UserAlertService) {
     this.effectsSettings = new EffectsSettings(.6, .7, .8);
-    this.currentSong = 'nothing';
     this.rootDir = '/music/';
-    this.setEffectsSettings(new EffectsSettings(.6, .7, .8));
+    this.initEffectsSettings();
     this.setPlaylistPosition();
+    this.currentSong = new Song();
     this._settingsService.onSettingsChange$.subscribe(
       data => this.setEffectsSettings(data)
     );
@@ -64,8 +57,8 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
   public nextTrackPlay(): void {
     if (!this.audio.paused) {
       this._playlistService.incrementPlaylistPosition();
-
       this.setPlaylistPosition();
+
       if (this.playlistPosition < this.playlist.length) {
         setTimeout(() => {
           this.initAudio();
@@ -85,11 +78,12 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
       this.audio.sourceNode.playbackRate.value =  this.effectsSettings.speed;
       this.audio.play();
       this.audio.sourceNode.onended = () => {
+
         this.nextTrackPlay();
       };
       this.setIsPlaying(true);
     } else if (!this.audio) {
-      this._userAlertService.message('please pick a playlist');
+      this._userAlertService.message('🐢 pick a playlist');
     }
 
   }
@@ -108,7 +102,6 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
     this.setIsPlaying(true);
     this.setIsLoading(false);
 
-    this.setCurrentSong();
     this.audio = new Pizzicato.Sound(this.rootDir + this.playlist[this.playlistPosition].path, () => {
       const reverb = new Pizzicato.Effects.Reverb({
         time: 5,
@@ -119,6 +112,8 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
 
       this.audio.addEffect(reverb);
       this.audio.play();
+      console.log(this.playlist[this.playlistPosition].path);
+      this.setCurrentSong();
       this.audio.sourceNode.playbackRate.value = this.effectsSettings.speed;
       this.audio.volume = this.effectsSettings.volume;
       this.audio.sourceNode.onended = () => {
@@ -128,9 +123,23 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
     });
   }
 
-  private setCurrentSong (): void {
-    this.currentSong = this.playlist[this.playlistPosition].path;
-    console.log(this.playlistPosition, this.playlist[this.playlistPosition].path);
+  private initEffectsSettings(): void {
+    if (localStorage.getItem('effectsSettings')) {
+      const localFX = JSON.parse(localStorage.getItem('effectsSettings'));
+      this.setEffectsSettings(new EffectsSettings(localFX._reverbMix, localFX._speed, localFX._volume));
+    } else {
+      this.setEffectsSettings(new EffectsSettings(.6, .7, .8));
+    }
+  }
+
+  private  setCurrentSong(): void {
+    if (this.playlist) {
+      this.currentSong = {
+        title: this.playlist[this.playlistPosition].title || '?',
+        artist: this.playlist[this.playlistPosition].artist || ' ?'
+      };
+      this.cd.detectChanges();
+    }
   }
 
   private setIsLoading(isLoading): void {
@@ -155,13 +164,7 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
   }
 
   ngOnDestroy(): void {
-    this.isPlayingSub.unsubscribe();
-    this.isLoadingSub.unsubscribe();
-    this.isLoadingSub.unsubscribe();
-    this.currentSongSub.unsubscribe();
-  }
-
-  ngOnInit() {
+    this._settingsService.onSettingsChange$.unsubscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -180,7 +183,6 @@ export class ControlComponent implements OnChanges, DoCheck, OnDestroy, OnInit {
     }
   }
 
-  ngDoCheck(): void {
-
+  ngOnInit() {
   }
 }

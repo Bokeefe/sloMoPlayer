@@ -1,5 +1,5 @@
 // angular
-import {Component, EventEmitter, Output, OnInit, Input, OnDestroy} from '@angular/core';
+import {Component, EventEmitter, Output, OnInit, Input, OnDestroy, ChangeDetectorRef} from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 // services
@@ -7,8 +7,6 @@ import {PlaylistService} from '../../shared/services/playlist.service';
 
 // models
 import {Song} from '../../shared/models/song';
-import {AudioService} from '../../shared/services/audio.service';
-import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-playlist',
@@ -21,14 +19,16 @@ export class PlaylistComponent implements OnInit, OnDestroy {
 
   public playlistPosition: number;
 
-  private playlistPositionSub: Subscription;
-
-  constructor(private _audioService: AudioService,
+  constructor(private cd: ChangeDetectorRef,
               private _playlistService: PlaylistService) {
-    // this.playlistPositionSub = this._playlistService.newPlaylistPosition$.subscribe(
-    //   data => this.setPlaylistPosition()
-    // );
     this.playlistPosition = 0;
+    this._playlistService.newPlaylistPosition$.subscribe(
+      data => {
+        this.setPlaylistPosition(data);
+        this.cd.detectChanges();
+        console.log(data);
+      }
+    );
   }
 
   public deleteSong(event: number): void {
@@ -46,14 +46,14 @@ export class PlaylistComponent implements OnInit, OnDestroy {
     this.playlistPosition = this._playlistService.getPlaylistPosition();
   }
 
-  private setPlaylistPosition(): void {
-    this.playlistPosition = this._playlistService.getPlaylistPosition();
-  }
-
-  ngOnInit() {
+  private setPlaylistPosition(position: number): void {
+    this.playlistPosition = position;
   }
 
   ngOnDestroy(): void {
-    this.playlistPositionSub.unsubscribe();
+    this._playlistService.newPlaylistPosition$.unsubscribe();
+  }
+
+  ngOnInit() {
   }
 }

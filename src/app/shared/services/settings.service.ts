@@ -12,7 +12,6 @@ export class SettingsService {
 
   constructor() {
     this.onSettingsChange$ = new EventEmitter<EffectsSettings>();
-    this.setEffectsSettings(new EffectsSettings(.6, .7, .8));
   }
 
   public getEffectsSettings(): EffectsSettings {
@@ -22,5 +21,12 @@ export class SettingsService {
   public setEffectsSettings(effectsSettings: EffectsSettings): void {
     this.effectsSettings = effectsSettings;
     this.onSettingsChange$.emit(this.effectsSettings);
+
+    this.setEffectsOnLocalStorage();
   }
+
+  private setEffectsOnLocalStorage(): void {
+    localStorage.setItem('effectsSettings', JSON.stringify(this.effectsSettings));
+  }
+
 }

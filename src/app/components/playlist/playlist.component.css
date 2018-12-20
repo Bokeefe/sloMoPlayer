@@ -19,9 +19,9 @@ li > span {
   font-size: 100px;
 }
 
-/*.active-song {*/
-  /*background: rgba(0, 0, 0, .5);*/
-/*}*/
+.active-song {
+  background: rgba(0, 0, 0, .5);
+}
 .artist {
   font-weight: 900;
   text-transform: uppercase;

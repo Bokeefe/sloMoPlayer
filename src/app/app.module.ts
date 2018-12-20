@@ -17,7 +17,6 @@ import {PlayerPageComponent} from './components/player-page/player-page.componen
 import {SettingsComponent} from './components/settings/settings.component';
 
 // services
-import {AudioService} from './shared/services/audio.service';
 import {PlaylistService} from './shared/services/playlist.service';
 import {HttpClientService } from './shared/services/http-client.service';
 import {UserAlertService} from './shared/services/user-alert.service';
@@ -51,7 +50,6 @@ import { InfoComponent } from './components/info/info.component';
   providers: [
     {provide: APP_BASE_HREF, useValue: '/'},
     { provide: MAT_SNACK_BAR_DATA, useValue: {} },
-    AudioService,
     ControlComponent,
     HttpClient,
     PlaylistService,

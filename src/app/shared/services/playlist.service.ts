@@ -63,7 +63,7 @@ export class PlaylistService {
 
   public incrementPlaylistPosition(): void {
     this.playlistPosition++;
-    this.newPlaylistPosition$.emit();
+    this.newPlaylistPosition$.emit(this.playlistPosition);
   }
 
   public emitNewGenre(genre: any): void {

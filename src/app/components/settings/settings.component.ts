@@ -5,7 +5,6 @@ import {FormControl, FormGroup} from '@angular/forms';
 // models
 import { EffectsSettings } from './../../shared/models/effects-settings';
 import {SettingsService} from '../../shared/services/settings.service';
-import {AudioService} from '../../shared/services/audio.service';
 
 @Component({
   selector: 'app-settings',
@@ -16,8 +15,7 @@ export class SettingsComponent implements OnInit {
 
 @Input() settingsForm: FormGroup;
 
-  constructor(private _audioService: AudioService,
-              private _settingsService: SettingsService) {
+  constructor(private _settingsService: SettingsService) {
     this.initSettingsForm();
     this.initFormChangeSub();
   }
@@ -32,17 +30,25 @@ export class SettingsComponent implements OnInit {
         );
 
         this._settingsService.setEffectsSettings(effectsSettings);
-
       }
     );
   }
 
   private initSettingsForm(): void {
-    this.settingsForm = new FormGroup({
-      reverbMix: new FormControl(60),
-      speed: new FormControl(70),
-      volume: new FormControl(80)
-    });
+    if (!!localStorage.getItem('effectsSettings')) {
+      const localFX = JSON.parse(localStorage.getItem('effectsSettings'));
+      this.settingsForm = new FormGroup({
+        reverbMix: new FormControl(localFX._reverbMix * 100),
+        speed: new FormControl(localFX._speed * 100),
+        volume: new FormControl(localFX._volume * 100)
+      });
+    } else {
+      this.settingsForm = new FormGroup({
+        reverbMix: new FormControl(60),
+        speed: new FormControl(70),
+        volume: new FormControl(80)
+      });
+    }
   }
 
   ngOnInit() {

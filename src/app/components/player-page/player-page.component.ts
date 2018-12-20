@@ -8,7 +8,6 @@ import { UserAlertService } from './../../shared/services/user-alert.service';
 // models
 import {Song} from '../../shared/models/song';
 import {Subscription} from 'rxjs';
-import {AudioService} from '../../shared/services/audio.service';
 
 @Component({
   selector: 'app-player-page',
@@ -26,8 +25,7 @@ export class PlayerPageComponent implements OnInit {
 
   public playlistPositionSub: Subscription;
 
-  constructor(private _audioService: AudioService,
-              private _playlistService: PlaylistService,
+  constructor(private _playlistService: PlaylistService,
               private _userAlertService: UserAlertService) {
     this.newPlaylist$ = new EventEmitter<any>();
     this.playlistPosition = 0;
