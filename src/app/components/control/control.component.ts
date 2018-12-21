@@ -89,6 +89,7 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   private initAudio(): void {
+    this.setIsLoading(true);
 
     if (this.audio && this.audio.playing) {
       this.audio.stop();
@@ -99,8 +100,6 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
       delete this.audio;
     }
 
-    this.setIsPlaying(true);
-    this.setIsLoading(false);
 
     this.audio = new Pizzicato.Sound(this.rootDir + this.playlist[this.playlistPosition].path, () => {
       const reverb = new Pizzicato.Effects.Reverb({
@@ -114,6 +113,9 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
       this.audio.play();
       console.log(this.playlist[this.playlistPosition].path);
       this.setCurrentSong();
+      this.setIsLoading(false);
+      this.setIsPlaying(true);
+      this.cd.detectChanges();
       this.audio.sourceNode.playbackRate.value = this.effectsSettings.speed;
       this.audio.volume = this.effectsSettings.volume;
       this.audio.sourceNode.onended = () => {
