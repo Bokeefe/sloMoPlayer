@@ -26,7 +26,6 @@ export class PlaylistComponent implements OnInit, OnDestroy {
       data => {
         this.setPlaylistPosition(data);
         this.cd.detectChanges();
-        console.log(data);
       }
     );
   }

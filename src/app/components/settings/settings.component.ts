@@ -36,7 +36,6 @@ export class SettingsComponent implements OnInit {
 
   private initSettingsForm(): void {
     const localFX = JSON.parse(localStorage.getItem('effectsSettings'));
-    // console.log(!!localFX, localFX.hasOwnProperty('_lamronMode'));
     if (!!localFX && localFX.hasOwnProperty('_lamronMode')) {
       this.settingsForm = new FormGroup({
         lamronMode: new FormControl(!!localFX._lamromMode),

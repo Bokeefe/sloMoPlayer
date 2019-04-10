@@ -1,16 +1,15 @@
-import { UserAlertService } from './../../shared/services/user-alert.service';
 // angular
-import {ChangeDetectorRef, Component, DoCheck, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 
 // libraries
 import * as Pizzicato from '../../../../node_modules/pizzicato/distr/Pizzicato.js';
 
 // services
 import {PlaylistService} from '../../shared/services/playlist.service';
+import { UserAlertService } from './../../shared/services/user-alert.service';
 
 // models
 import {EffectsSettings} from '../../shared/models/effects-settings';
-import {Subscription} from 'rxjs';
 import {SettingsService} from '../../shared/services/settings.service';
 import {Song} from '../../shared/models/song';
 
@@ -23,17 +22,11 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
   @Input() playlist: any;
 
   public currentSong: any;
-
   public isPlaying: boolean;
-
   public isLoading: boolean;
-
   public audio: any;
-
   public playlistPosition: number;
-
   public effectsSettings: EffectsSettings;
-
   private rootDir: string;
 
   constructor(private cd: ChangeDetectorRef,
@@ -41,7 +34,6 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
               private _settingsService: SettingsService,
               private _userAlertService: UserAlertService) {
     this.rootDir = '/music/';
-    
   }
 
   public onSnail(): void {
@@ -94,7 +86,6 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
       delete this.audio;
     }
 
-
     this.audio = new Pizzicato.Sound(this.rootDir + this.playlist[this.playlistPosition].path, () => {
       const reverb = new Pizzicato.Effects.Reverb({
         time: 5,
@@ -105,7 +96,6 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
 
       this.audio.addEffect(reverb);
       this.audio.play();
-      console.log(this.playlist[this.playlistPosition].path);
       this.setCurrentSong();
       this.setIsLoading(false);
       this.setIsPlaying(true);

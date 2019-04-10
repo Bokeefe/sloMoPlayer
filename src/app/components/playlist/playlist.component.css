@@ -8,15 +8,15 @@ li > span {
   text-align: center;
   color: white;
   justify-content: center;
-  margin: 150px auto;
+  margin: 100px auto;
   width: 80%;
 }
 .pick > p {
-  font-size: 18px;
+  font-size: 16px;
   color: white;
 }
 .pick > span {
-  font-size: 100px;
+  font-size: 80px;
 }
 
 .active-song {
