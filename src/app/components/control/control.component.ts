@@ -40,14 +40,8 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
               private _playlistService: PlaylistService,
               private _settingsService: SettingsService,
               private _userAlertService: UserAlertService) {
-    this.effectsSettings = new EffectsSettings(false, .6, .7, .8);
     this.rootDir = '/music/';
-    this.initEffectsSettings();
-    this.setPlaylistPosition();
-    this.currentSong = new Song();
-    this._settingsService.onSettingsChange$.subscribe(
-      data => this.setEffectsSettings(data)
-    );
+    
   }
 
   public onSnail(): void {
@@ -126,9 +120,9 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   private initEffectsSettings(): void {
-    if (localStorage.getItem('effectsSettings')) {
-      const localFX = JSON.parse(localStorage.getItem('effectsSettings'));
-      this.setEffectsSettings(new EffectsSettings(localFX._reverbMix, localFX._speed, localFX._volume));
+    const localFX = JSON.parse(localStorage.getItem('effectsSettings'));
+    if (!!localFX && localFX.hasOwnProperty('lamronMode')) {
+      this.setEffectsSettings(new EffectsSettings(localFX._lamronMode, localFX._reverbMix, localFX._speed, localFX._volume));
     } else {
       this.setEffectsSettings(new EffectsSettings(false, .6, .7, .8));
     }
@@ -187,5 +181,13 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   ngOnInit() {
+    this.effectsSettings = new EffectsSettings(false, .6, .7, .8);
+
+    this.initEffectsSettings();
+    this.setPlaylistPosition();
+    this.currentSong = new Song();
+    this._settingsService.onSettingsChange$.subscribe(
+      data => this.setEffectsSettings(data)
+    );
   }
 }

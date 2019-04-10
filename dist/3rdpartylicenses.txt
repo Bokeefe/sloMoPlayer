@@ -588,8 +588,6 @@ MIT
 @angular/forms
 MIT
 
-@angular/material/slide-toggle
-
 @angular/material/slider
 
 @angular/material/chips
