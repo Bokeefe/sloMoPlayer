@@ -40,7 +40,7 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
               private _playlistService: PlaylistService,
               private _settingsService: SettingsService,
               private _userAlertService: UserAlertService) {
-    this.effectsSettings = new EffectsSettings(.6, .7, .8);
+    this.effectsSettings = new EffectsSettings(false, .6, .7, .8);
     this.rootDir = '/music/';
     this.initEffectsSettings();
     this.setPlaylistPosition();
@@ -130,7 +130,7 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
       const localFX = JSON.parse(localStorage.getItem('effectsSettings'));
       this.setEffectsSettings(new EffectsSettings(localFX._reverbMix, localFX._speed, localFX._volume));
     } else {
-      this.setEffectsSettings(new EffectsSettings(.6, .7, .8));
+      this.setEffectsSettings(new EffectsSettings(false, .6, .7, .8));
     }
   }
 
@@ -149,6 +149,7 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   private setEffectsSettings(effectsSettings: EffectsSettings): void {
+    console.log(effectsSettings);
     this.effectsSettings = effectsSettings;
     if (this.audio) {
       this.audio.volume = this.effectsSettings.volume;

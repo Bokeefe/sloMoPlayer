@@ -24,6 +24,7 @@ export class SettingsComponent implements OnInit {
     this.settingsForm.valueChanges.subscribe(
       data => {
         const effectsSettings = new EffectsSettings(
+          data.lamronMode,
           data.reverbMix * .01,
           data.speed * .01,
           data.volume * .01
@@ -38,12 +39,14 @@ export class SettingsComponent implements OnInit {
     if (!!localStorage.getItem('effectsSettings')) {
       const localFX = JSON.parse(localStorage.getItem('effectsSettings'));
       this.settingsForm = new FormGroup({
+        lamronMode: new FormControl(localFX._lamromMode),
         reverbMix: new FormControl(localFX._reverbMix * 100),
         speed: new FormControl(localFX._speed * 100),
         volume: new FormControl(localFX._volume * 100)
       });
     } else {
       this.settingsForm = new FormGroup({
+        lamronMode: new FormControl(false),
         reverbMix: new FormControl(60),
         speed: new FormControl(70),
         volume: new FormControl(80)
