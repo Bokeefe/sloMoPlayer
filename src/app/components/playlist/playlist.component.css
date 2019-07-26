@@ -4,6 +4,10 @@ li:hover{
 li > span {
   padding:15px;
 }
+.fa {
+  padding-right: 5px;
+  font-size:30px;
+}
 .pick {
   text-align: center;
   color: white;
