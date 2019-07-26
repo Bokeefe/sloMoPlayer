@@ -56,13 +56,13 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public togglePlay(): void {
-
     if (this.audio && this.audio.playing) {
       this.audio.pause();
+      this.audio.sourceNode.playbackRate.value = this.effectsSettings.speed;
       this.setIsPlaying(false);
     } else if (this.audio && this.audio.paused) {
-      this.audio.sourceNode.playbackRate.value =  this.effectsSettings.speed;
       this.audio.play();
+      this.audio.sourceNode.playbackRate.value = this.effectsSettings.speed;
       this.audio.sourceNode.onended = () => {
 
         this.nextTrackPlay();
@@ -133,7 +133,6 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   private setEffectsSettings(effectsSettings: EffectsSettings): void {
-    console.log(effectsSettings);
     this.effectsSettings = effectsSettings;
     if (this.audio) {
       this.audio.volume = this.effectsSettings.volume;
