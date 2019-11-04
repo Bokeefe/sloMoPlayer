@@ -96,7 +96,7 @@ readMetadata(rootMusicDir, function (tracks) {
       playlist[randomIndex] = temporaryValue;
     }
 
-    playlist = playlist.slice(0, 30)
+    playlist = playlist.slice(0, 5)
     return playlist;
   };
 
