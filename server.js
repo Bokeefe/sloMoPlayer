@@ -32,7 +32,7 @@ var readMetadata = function (basedir, func) {
     var p = path.join(root, stats.name);
     var fileName = p.replace('music/', '');
     trackDict(p, fileName,  function (d) {
-        // console.log(d);
+        console.log(d);
       md.push(d);
     });
 
@@ -116,7 +116,7 @@ readMetadata(rootMusicDir, function (tracks) {
   });
   aura.get('/getPlaylist/:genre', jtype, function (req, res) {
     shuffle(playlist[req.params.genre]);
-    res.json(playlist[req.params.genre].slice(0, 30));
+    res.json(playlist[req.params.genre].slice(0, 5));
   });
   aura.get('/tracks/:id', jtype, loadTrack, function (req, res) {
     res.json(req.track);
@@ -134,7 +134,7 @@ readMetadata(rootMusicDir, function (tracks) {
   var app = express();
   app.use('/', aura);
 
-  var server = app.listen(3000, '0.0.0.0', function () {
+  var server = app.listen(3000, 'localhost', function () {
     var host = server.address().address;
     var port = server.address().port;
     console.log(host + ':' +  port);

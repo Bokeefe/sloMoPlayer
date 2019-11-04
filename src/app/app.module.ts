@@ -4,7 +4,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { NgModule } from '@angular/core';
-import {MatChipsModule, MatSnackBarModule, MatProgressBarModule, MatSliderModule, MAT_SNACK_BAR_DATA} from '@angular/material';
+import {MatChipsModule, MatSnackBarModule, MatProgressBarModule, MatSliderModule, MAT_SNACK_BAR_DATA, MatSlideToggleModule} from '@angular/material';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 // components
@@ -42,6 +42,7 @@ import { InfoComponent } from './components/info/info.component';
     MatSnackBarModule,
     MatProgressBarModule,
     MatSliderModule,
+    MatSlideToggleModule,
     BrowserModule,
     HttpClientModule,
     FormsModule,

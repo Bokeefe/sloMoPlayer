@@ -1,5 +1,12 @@
 <form [formGroup]="settingsForm">
   <div class="container">
+    <!-- <div class="lamron-toggle">
+        <label for="mode">Lamron Mode (no effects, faster)
+          <mat-slide-toggle formControlName="lamronMode" name="lamronMode"> </mat-slide-toggle>
+        </label>
+    </div> -->
+
+
     <label>
       Volume:
       <mat-slider type="range" min="0" max="100" formControlName="volume" thumbLabel></mat-slider>

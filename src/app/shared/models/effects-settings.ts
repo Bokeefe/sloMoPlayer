@@ -1,5 +1,7 @@
 export class EffectsSettings {
 
+  private _lamronMode: boolean
+
   private _reverbMix: number;
 
   private _speed: number;
@@ -7,12 +9,22 @@ export class EffectsSettings {
   private _volume: number;
 
 
-  constructor(reverbMix?: number,
+  constructor(lamronMode?: boolean,
+              reverbMix?: number,
               speed?: number,
               volume?: number) {
+    this._lamronMode = lamronMode;
     this._reverbMix = reverbMix;
     this._speed = speed;
     this._volume = volume;
+  }
+  
+  get lamronMode(): boolean {
+    return this._lamronMode;
+  }
+
+  set lamronMode(lamronMode: boolean) {
+    this._lamronMode = lamronMode;
   }
 
   get reverbMix(): number {

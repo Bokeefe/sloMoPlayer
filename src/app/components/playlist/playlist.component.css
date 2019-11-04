@@ -4,19 +4,23 @@ li:hover{
 li > span {
   padding:15px;
 }
+.fa {
+  padding-right: 5px;
+  font-size:30px;
+}
 .pick {
   text-align: center;
   color: white;
   justify-content: center;
-  margin: 200px auto;
+  margin: 100px auto;
   width: 80%;
 }
 .pick > p {
-  font-size: 18px;
+  font-size: 16px;
   color: white;
 }
 .pick > span {
-  font-size: 100px;
+  font-size: 80px;
 }
 
 .active-song {

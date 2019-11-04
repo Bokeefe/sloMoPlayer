@@ -1,16 +1,15 @@
-import { UserAlertService } from './../../shared/services/user-alert.service';
 // angular
-import {ChangeDetectorRef, Component, DoCheck, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 
 // libraries
 import * as Pizzicato from '../../../../node_modules/pizzicato/distr/Pizzicato.js';
 
 // services
 import {PlaylistService} from '../../shared/services/playlist.service';
+import { UserAlertService } from './../../shared/services/user-alert.service';
 
 // models
 import {EffectsSettings} from '../../shared/models/effects-settings';
-import {Subscription} from 'rxjs';
 import {SettingsService} from '../../shared/services/settings.service';
 import {Song} from '../../shared/models/song';
 
@@ -23,25 +22,23 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
   @Input() playlist: any;
 
   public currentSong: any;
-
   public isPlaying: boolean;
-
   public isLoading: boolean;
-
   public audio: any;
-
   public playlistPosition: number;
-
   public effectsSettings: EffectsSettings;
-
   private rootDir: string;
 
   constructor(private cd: ChangeDetectorRef,
               private _playlistService: PlaylistService,
               private _settingsService: SettingsService,
               private _userAlertService: UserAlertService) {
-    this.effectsSettings = new EffectsSettings(.6, .7, .8);
     this.rootDir = '/music/';
+  }
+  
+  ngOnInit() {
+    this.effectsSettings = new EffectsSettings(false, .6, .7, .8);
+
     this.initEffectsSettings();
     this.setPlaylistPosition();
     this.currentSong = new Song();
@@ -70,13 +67,13 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   public togglePlay(): void {
-
     if (this.audio && this.audio.playing) {
       this.audio.pause();
+      this.audio.sourceNode.playbackRate.value = this.effectsSettings.speed;
       this.setIsPlaying(false);
     } else if (this.audio && this.audio.paused) {
-      this.audio.sourceNode.playbackRate.value =  this.effectsSettings.speed;
       this.audio.play();
+      this.audio.sourceNode.playbackRate.value = this.effectsSettings.speed;
       this.audio.sourceNode.onended = () => {
 
         this.nextTrackPlay();
@@ -89,6 +86,7 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   private initAudio(): void {
+    this.setIsLoading(true);
 
     if (this.audio && this.audio.playing) {
       this.audio.stop();
@@ -98,9 +96,6 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
       this.setIsPlaying(false);
       delete this.audio;
     }
-
-    this.setIsPlaying(true);
-    this.setIsLoading(false);
 
     this.audio = new Pizzicato.Sound(this.rootDir + this.playlist[this.playlistPosition].path, () => {
       const reverb = new Pizzicato.Effects.Reverb({
@@ -112,8 +107,10 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
 
       this.audio.addEffect(reverb);
       this.audio.play();
-      console.log(this.playlist[this.playlistPosition].path);
       this.setCurrentSong();
+      this.setIsLoading(false);
+      this.setIsPlaying(true);
+      this.cd.detectChanges();
       this.audio.sourceNode.playbackRate.value = this.effectsSettings.speed;
       this.audio.volume = this.effectsSettings.volume;
       this.audio.sourceNode.onended = () => {
@@ -124,11 +121,11 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
   }
 
   private initEffectsSettings(): void {
-    if (localStorage.getItem('effectsSettings')) {
-      const localFX = JSON.parse(localStorage.getItem('effectsSettings'));
-      this.setEffectsSettings(new EffectsSettings(localFX._reverbMix, localFX._speed, localFX._volume));
+    const localFX = JSON.parse(localStorage.getItem('effectsSettings'));
+    if (!!localFX && localFX.hasOwnProperty('lamronMode')) {
+      this.setEffectsSettings(new EffectsSettings(localFX._lamronMode, localFX._reverbMix, localFX._speed, localFX._volume));
     } else {
-      this.setEffectsSettings(new EffectsSettings(.6, .7, .8));
+      this.setEffectsSettings(new EffectsSettings(false, .6, .7, .8));
     }
   }
 
@@ -183,6 +180,5 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  ngOnInit() {
-  }
+ 
 }

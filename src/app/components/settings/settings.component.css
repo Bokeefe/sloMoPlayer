@@ -8,3 +8,7 @@ label {
 mat-slider {
   width: 100%;
 }
+.lamron-toggle {
+  float: right;
+  
+}

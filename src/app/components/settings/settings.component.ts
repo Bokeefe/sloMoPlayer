@@ -16,14 +16,14 @@ export class SettingsComponent implements OnInit {
 @Input() settingsForm: FormGroup;
 
   constructor(private _settingsService: SettingsService) {
-    this.initSettingsForm();
-    this.initFormChangeSub();
+  
   }
 
   private initFormChangeSub(): void {
     this.settingsForm.valueChanges.subscribe(
       data => {
         const effectsSettings = new EffectsSettings(
+          data.lamronMode,
           data.reverbMix * .01,
           data.speed * .01,
           data.volume * .01
@@ -35,15 +35,17 @@ export class SettingsComponent implements OnInit {
   }
 
   private initSettingsForm(): void {
-    if (!!localStorage.getItem('effectsSettings')) {
-      const localFX = JSON.parse(localStorage.getItem('effectsSettings'));
+    const localFX = JSON.parse(localStorage.getItem('effectsSettings'));
+    if (!!localFX && localFX.hasOwnProperty('_lamronMode')) {
       this.settingsForm = new FormGroup({
+        lamronMode: new FormControl(!!localFX._lamromMode),
         reverbMix: new FormControl(localFX._reverbMix * 100),
         speed: new FormControl(localFX._speed * 100),
         volume: new FormControl(localFX._volume * 100)
       });
     } else {
       this.settingsForm = new FormGroup({
+        lamronMode: new FormControl(false),
         reverbMix: new FormControl(60),
         speed: new FormControl(70),
         volume: new FormControl(80)
@@ -52,5 +54,7 @@ export class SettingsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.initSettingsForm();
+    this.initFormChangeSub();
   }
 }
