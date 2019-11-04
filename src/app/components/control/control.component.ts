@@ -35,6 +35,17 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
               private _userAlertService: UserAlertService) {
     this.rootDir = '/music/';
   }
+  
+  ngOnInit() {
+    this.effectsSettings = new EffectsSettings(false, .6, .7, .8);
+
+    this.initEffectsSettings();
+    this.setPlaylistPosition();
+    this.currentSong = new Song();
+    this._settingsService.onSettingsChange$.subscribe(
+      data => this.setEffectsSettings(data)
+    );
+  }
 
   public onSnail(): void {
     this._userAlertService.message();
@@ -169,14 +180,5 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
     }
   }
 
-  ngOnInit() {
-    this.effectsSettings = new EffectsSettings(false, .6, .7, .8);
-
-    this.initEffectsSettings();
-    this.setPlaylistPosition();
-    this.currentSong = new Song();
-    this._settingsService.onSettingsChange$.subscribe(
-      data => this.setEffectsSettings(data)
-    );
-  }
+ 
 }

@@ -116,7 +116,7 @@ readMetadata(rootMusicDir, function (tracks) {
   });
   aura.get('/getPlaylist/:genre', jtype, function (req, res) {
     shuffle(playlist[req.params.genre]);
-    res.json(playlist[req.params.genre].slice(0, 30));
+    res.json(playlist[req.params.genre].slice(0, 5));
   });
   aura.get('/tracks/:id', jtype, loadTrack, function (req, res) {
     res.json(req.track);
