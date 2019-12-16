@@ -102,6 +102,7 @@ readMetadata(rootMusicDir, function (tracks) {
 
   // AURA API endpoints.
   aura.use("/", express.static(__dirname + '/dist/'));
+  
   aura.use("/music", express.static(__dirname + '/music/'));
 
 
