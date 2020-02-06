@@ -2,12 +2,13 @@
 /* You can add global styles to this file, and also import other style files */
 
 body {
-  background: url('./assets/backgrounds/3.gif') no-repeat center center fixed; 
+  background: url('./assets/backgrounds/fire.gif') no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
   height: 100%;
+  width: 100%;
   position: absolute;
 }
 

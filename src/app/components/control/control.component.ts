@@ -96,7 +96,7 @@ export class ControlComponent implements OnChanges, OnDestroy, OnInit {
       this.setIsPlaying(false);
       delete this.audio;
     }
-
+//
     this.audio = new Pizzicato.Sound(this.rootDir + this.playlist[this.playlistPosition].path, () => {
       const reverb = new Pizzicato.Effects.Reverb({
         time: 5,
